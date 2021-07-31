@@ -3,7 +3,6 @@
 
 #include <QObject>
 class QTimer;
-
 class Life : public QObject
 {
     Q_OBJECT

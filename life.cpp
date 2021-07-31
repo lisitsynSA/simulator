@@ -1,6 +1,6 @@
 #include "life.h"
-#include <QRandomGenerator>
 #include <QTimer>
+#include <QDateTime>
 
 Life::Life(uint32_t xSize, uint32_t ySize, QObject *parent) :
     QObject(parent), m_xSize(xSize), m_ySize(ySize), m_ym(xSize + 2) {
@@ -11,6 +11,7 @@ Life::Life(uint32_t xSize, uint32_t ySize, QObject *parent) :
     generateSpace();
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(playGame()));
+    qsrand(QDateTime::currentDateTime().toTime_t());
 }
 
 Life::~Life() {
@@ -22,7 +23,7 @@ Life::~Life() {
 void Life::generateSpace() {
     for (uint32_t y = 1; y <= m_ySize; y++)
     for (uint32_t x = 1; x <= m_xSize; x++) {
-        if (QRandomGenerator::global()->bounded(2)) {
+        if (qrand() % 2 == 0) {
             // alive
             m_tmp[y*m_ym + x] = 1;
         } else {
@@ -33,7 +34,7 @@ void Life::generateSpace() {
 }
 
 void Life::startGame() {
-    m_timer->start(100);
+    m_timer->start(10);
 }
 
 void Life::addVirus() {
@@ -50,8 +51,7 @@ void Life::calcSpace() {
     for (uint32_t y = 1; y <= m_ySize; y++)
     for (uint32_t x = 1; x <= m_xSize; x++) {
         m_tmpNew[y*m_ym + x] = calcCell(x, y);
-        if (m_virusQueue &&
-                QRandomGenerator::global()->bounded(m_ySize*m_xSize) == 0){
+        if (m_virusQueue && m_tmpNew[y*m_ym + x] == 1 && qrand() % (m_ySize*m_xSize) == 0){
             m_virusQueue--;
             m_tmpNew[y*m_ym + x] = 3;
         }
