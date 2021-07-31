@@ -11,7 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(ui->gridLayoutWidget);
     m_display = new Display(ui->graphicsView, this);
     m_life = new Life(1000, 600, this);
-    connect(ui->actionDebug_signal, SIGNAL(triggered(bool)), m_life, SLOT(startGame()));
+    connect(ui->actionStart_life, SIGNAL(triggered(bool)), m_life, SLOT(startGame()));
+    connect(ui->actionAdd_virus, SIGNAL(triggered(bool)), m_life, SLOT(addVirus()));
     connect(m_life, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
 }

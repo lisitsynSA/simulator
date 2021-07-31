@@ -7,6 +7,7 @@ Life::Life(uint32_t xSize, uint32_t ySize, QObject *parent) :
     m_space = new uint32_t[xSize*ySize];
     m_tmp = new uint8_t[m_ym*(ySize + 2)];
     m_tmpNew = new uint8_t[m_ym*(ySize + 2)];
+    m_virusQueue = 0;
     generateSpace();
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(playGame()));
@@ -35,6 +36,10 @@ void Life::startGame() {
     m_timer->start(100);
 }
 
+void Life::addVirus() {
+    m_virusQueue++;
+}
+
 void Life::playGame() {
     calcSpace();
     drawSpace();
@@ -45,6 +50,11 @@ void Life::calcSpace() {
     for (uint32_t y = 1; y <= m_ySize; y++)
     for (uint32_t x = 1; x <= m_xSize; x++) {
         m_tmpNew[y*m_ym + x] = calcCell(x, y);
+        if (m_virusQueue &&
+                QRandomGenerator::global()->bounded(m_ySize*m_xSize) == 0){
+            m_virusQueue--;
+            m_tmpNew[y*m_ym + x] = 3;
+        }
     }
     for (uint32_t y = 1; y <= m_ySize; y++) {
         m_tmpNew[y*m_ym] = m_tmpNew[y*m_ym + m_xSize];
@@ -68,12 +78,16 @@ uint8_t Life::calcCell(uint32_t x, uint32_t y) {
     uint32_t y_u = y - 1;
     uint32_t y_d = y + 1;
     uint32_t res = 0;
-    res += m_tmp[y_u*m_ym + x_l] + m_tmp[y_u*m_ym + x] + m_tmp[y_u*m_ym + x_r] +
-           m_tmp[y  *m_ym + x_l] + m_tmp[y  *m_ym + x] + m_tmp[y  *m_ym + x_r] +
-           m_tmp[y_d*m_ym + x_l] + m_tmp[y_d*m_ym + x] + m_tmp[y_d*m_ym + x_r];
+    uint32_t virus = 0;
+    res += (m_tmp[y_u*m_ym + x_l]&1) + (m_tmp[y_u*m_ym + x]&1) + (m_tmp[y_u*m_ym + x_r]&1) +
+           (m_tmp[y  *m_ym + x_l]&1) + (m_tmp[y  *m_ym + x]&1) + (m_tmp[y  *m_ym + x_r]&1) +
+           (m_tmp[y_d*m_ym + x_l]&1) + (m_tmp[y_d*m_ym + x]&1) + (m_tmp[y_d*m_ym + x_r]&1);
+    virus +=(m_tmp[y_u*m_ym + x_l]&2) + (m_tmp[y_u*m_ym + x]&2) + (m_tmp[y_u*m_ym + x_r]&2) +
+            (m_tmp[y  *m_ym + x_l]&2) + (m_tmp[y  *m_ym + x]&2) + (m_tmp[y  *m_ym + x_r]&2) +
+            (m_tmp[y_d*m_ym + x_l]&2) + (m_tmp[y_d*m_ym + x]&2) + (m_tmp[y_d*m_ym + x_r]&2);
 
     if (res == 3 || (res == 4 && m_tmp[y*m_ym + x])) {
-        return 1;
+        return virus ? 3 : 1;
     }
     return 0;
 }
@@ -83,12 +97,16 @@ void Life::drawSpace() {
     for (uint32_t x = 1; x <= m_xSize; x++) {
         uint32_t &color = m_space[(y - 1)*m_xSize + x - 1];
         uint8_t &cell = m_tmp[y*m_ym + x];
-        if (cell) {
+        if (cell == 3) {
+            color = 0xffff0000;
+        }
+        if (cell == 1) {
             color |= 0xff00ff00;
             if ((color & 0xff) != 0xff) {
                 color++;
             }
-        } else {
+        }
+        if (cell == 0){
             color = 0xff000000;
         }
     }

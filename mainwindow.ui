@@ -39,13 +39,14 @@
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuDebug">
+   <widget class="QMenu" name="menuLife">
     <property name="title">
-     <string>Debug</string>
+     <string>Life</string>
     </property>
-    <addaction name="actionDebug_signal"/>
+    <addaction name="actionStart_life"/>
+    <addaction name="actionAdd_virus"/>
    </widget>
-   <addaction name="menuDebug"/>
+   <addaction name="menuLife"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -59,9 +60,14 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <action name="actionDebug_signal">
+  <action name="actionStart_life">
    <property name="text">
-    <string>Debug signal</string>
+    <string>Start life</string>
+   </property>
+  </action>
+  <action name="actionAdd_virus">
+   <property name="text">
+    <string>Add virus</string>
    </property>
   </action>
  </widget>
