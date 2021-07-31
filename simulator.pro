@@ -17,11 +17,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     display.cpp \
+    life.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     display.h \
+    life.h \
     mainwindow.h
 
 FORMS += \
