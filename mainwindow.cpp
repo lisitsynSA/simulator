@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setCentralWidget(ui->gridLayoutWidget);
     m_display = new Display(ui->graphicsView, this);
+    connect(ui->actionDebug_signal, SIGNAL(triggered(bool)), m_display, SLOT(clean()));
 }
 
 MainWindow::~MainWindow()

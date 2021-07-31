@@ -11,7 +11,9 @@ class Display : public QObject
     Q_OBJECT
 public:
     Display(QGraphicsView* view, QObject *parent = nullptr);
-    void loadARGB32(uchar *data, int width, int height);
+public slots:
+    void clean();
+    void loadARGB32(uint32_t *data, int width, int height);
 
 signals:
 
@@ -19,7 +21,6 @@ private:
     QGraphicsView* m_view = nullptr;
     QGraphicsScene* m_scene = nullptr;
     QGraphicsPixmapItem* m_item = nullptr;
-    QImage* m_image = nullptr;
 };
 
 #endif // DISPLAY_H
