@@ -41,6 +41,10 @@ void Life::addVirus() {
     m_virusQueue++;
 }
 
+void Life::addVirus(uint32_t x, uint32_t y) {
+    m_tmp[y*m_ym + x] = 3;
+}
+
 void Life::playGame() {
     calcSpace();
     drawSpace();

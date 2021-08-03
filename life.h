@@ -12,6 +12,7 @@ public:
 public slots:
     void startGame();
     void addVirus();
+    void addVirus(uint32_t x, uint32_t y);
     void playGame();
 signals:
     void sendSpace(uint32_t* space, uint32_t width, uint32_t height);

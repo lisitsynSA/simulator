@@ -16,7 +16,7 @@ public slots:
     void loadARGB32(uint32_t *data, uint32_t width, uint32_t height);
 
 signals:
-
+    void click(uint32_t x, uint32_t y);
 private:
     QGraphicsView* m_view = nullptr;
     QGraphicsScene* m_scene = nullptr;
