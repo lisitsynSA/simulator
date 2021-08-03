@@ -2,15 +2,27 @@
 #define DISPLAY_H
 
 #include <QObject>
-class QGraphicsView;
+#include <QGraphicsView>
+#include <QGraphicsPixmapItem>
 class QGraphicsScene;
-class QGraphicsPixmapItem;
+class Display;
 
-class Display : public QObject
+class mousePixmapItem : public QGraphicsPixmapItem
+{
+public:
+    mousePixmapItem(Display *display, QGraphicsItem *parent = nullptr):
+        QGraphicsPixmapItem(parent), m_displ(display) {}
+private:
+    Display *m_displ;
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+};
+
+class Display : public QGraphicsView
 {
     Q_OBJECT
 public:
-    Display(QGraphicsView* view, QObject *parent = nullptr);
+    Display(QWidget *parent = nullptr);
 public slots:
     void clean();
     void loadARGB32(uint32_t *data, uint32_t width, uint32_t height);
@@ -18,9 +30,8 @@ public slots:
 signals:
     void click(uint32_t x, uint32_t y);
 private:
-    QGraphicsView* m_view = nullptr;
     QGraphicsScene* m_scene = nullptr;
-    QGraphicsPixmapItem* m_item = nullptr;
+    mousePixmapItem* m_item = nullptr;
 };
 
 #endif // DISPLAY_H

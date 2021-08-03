@@ -2,16 +2,24 @@
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
 #include <QDebug>
+#include <QGraphicsSceneMouseEvent>
 #include "display.h"
 
-Display::Display(QGraphicsView* view, QObject *parent)
-    : QObject(parent), m_view(view)
+void mousePixmapItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    qDebug() << "Custom view clicked: " << event->scenePos();
+    emit m_displ->click(event->scenePos().x(), event->scenePos().y());
+    QGraphicsItem::mousePressEvent(event);
+}
+
+Display::Display(QWidget *parent)
+    : QGraphicsView(parent)
 {
     m_scene = new QGraphicsScene(this);
-    m_item = new QGraphicsPixmapItem();
+    m_item = new mousePixmapItem(this);
 
     m_scene->addItem(m_item);
-    m_view->setScene(m_scene);
+    setScene(m_scene);
 }
 
 void Display::clean() {

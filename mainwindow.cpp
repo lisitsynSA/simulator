@@ -9,12 +9,15 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     setCentralWidget(ui->gridLayoutWidget);
-    m_display = new Display(ui->graphicsView, this);
+    m_display = new Display(this);
+    ui->gridLayoutWidget->layout()->addWidget(m_display);
     m_life = new Life(1000, 600, this);
     connect(ui->actionStart_life, SIGNAL(triggered(bool)), m_life, SLOT(startGame()));
     connect(ui->actionAdd_virus, SIGNAL(triggered(bool)), m_life, SLOT(addVirus()));
     connect(m_life, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
+    uint32_t array[100];
+    m_display->loadARGB32(array, 10, 10);
 }
 
 MainWindow::~MainWindow()
