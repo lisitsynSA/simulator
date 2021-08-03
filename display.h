@@ -16,6 +16,7 @@ private:
     Display *m_displ;
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 };
 
 class Display : public QGraphicsView
@@ -28,7 +29,8 @@ public slots:
     void loadARGB32(uint32_t *data, uint32_t width, uint32_t height);
 
 signals:
-    void click(uint32_t x, uint32_t y);
+    void leftClick(uint32_t x, uint32_t y);
+    void rightClick(uint32_t x, uint32_t y);
 private:
     QGraphicsScene* m_scene = nullptr;
     mousePixmapItem* m_item = nullptr;

@@ -14,10 +14,11 @@ MainWindow::MainWindow(QWidget *parent)
     m_life = new Life(1000, 600, this);
     connect(ui->actionStart_life, SIGNAL(triggered(bool)), m_life, SLOT(startGame()));
     connect(ui->actionAdd_virus, SIGNAL(triggered(bool)), m_life, SLOT(addVirus()));
+    connect(ui->actionRegenerate, SIGNAL(triggered(bool)), m_life, SLOT(generateSpace()));
     connect(m_life, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
-    uint32_t array[100];
-    m_display->loadARGB32(array, 10, 10);
+    connect(m_display, SIGNAL(leftClick(uint32_t,uint32_t)), m_life, SLOT(addLife(uint32_t,uint32_t)));
+    connect(m_display, SIGNAL(rightClick(uint32_t,uint32_t)), m_life, SLOT(addVirus(uint32_t,uint32_t)));
 }
 
 MainWindow::~MainWindow()

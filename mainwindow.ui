@@ -41,6 +41,7 @@
     </property>
     <addaction name="actionStart_life"/>
     <addaction name="actionAdd_virus"/>
+    <addaction name="actionRegenerate"/>
    </widget>
    <addaction name="menuLife"/>
   </widget>
@@ -64,6 +65,11 @@
   <action name="actionAdd_virus">
    <property name="text">
     <string>Add virus</string>
+   </property>
+  </action>
+  <action name="actionRegenerate">
+   <property name="text">
+    <string>Regenerate</string>
    </property>
   </action>
  </widget>

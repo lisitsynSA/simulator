@@ -13,7 +13,9 @@ public slots:
     void startGame();
     void addVirus();
     void addVirus(uint32_t x, uint32_t y);
+    void addLife(uint32_t x, uint32_t y);
     void playGame();
+    void generateSpace();
 signals:
     void sendSpace(uint32_t* space, uint32_t width, uint32_t height);
 private:
@@ -26,7 +28,6 @@ private:
     QTimer *m_timer;
     uint32_t m_virusQueue;
 
-    void generateSpace();
     void calcSpace();
     uint8_t calcCell(uint32_t x, uint32_t y);
     void drawSpace();
