@@ -3,7 +3,11 @@
 
 #include <QMainWindow>
 class Display;
+class Memory;
 class Life;
+class Relaxation;
+class RelaxationTor;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -19,6 +23,9 @@ public:
 private:
     Ui::MainWindow *ui;
     Display *m_display;
+    Memory *m_mem;
     Life *m_life;
+    Relaxation *m_relax;
+    RelaxationTor *m_relaxTor;
 };
 #endif // MAINWINDOW_H

@@ -18,15 +18,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     display.cpp \
     life.cpp \
+    locus.cpp \
     main.cpp \
     mainwindow.cpp \
-    memory.cpp
+    memory.cpp \
+    relaxation.cpp \
+    relaxationtor.cpp
 
 HEADERS += \
     display.h \
     life.h \
+    locus.h \
     mainwindow.h \
-    memory.h
+    memory.h \
+    relaxation.h \
+    relaxationtor.h
 
 FORMS += \
     mainwindow.ui

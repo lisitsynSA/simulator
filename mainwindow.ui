@@ -35,15 +35,15 @@
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuLife">
+   <widget class="QMenu" name="menuDemo">
     <property name="title">
-     <string>Life</string>
+     <string>Demo</string>
     </property>
     <addaction name="actionStart_life"/>
-    <addaction name="actionAdd_virus"/>
-    <addaction name="actionRegenerate"/>
+    <addaction name="actionStart_relax"/>
+    <addaction name="actionStart_relax_tor"/>
    </widget>
-   <addaction name="menuLife"/>
+   <addaction name="menuDemo"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -62,14 +62,14 @@
     <string>Start life</string>
    </property>
   </action>
-  <action name="actionAdd_virus">
+  <action name="actionStart_relax">
    <property name="text">
-    <string>Add virus</string>
+    <string>Start relax</string>
    </property>
   </action>
-  <action name="actionRegenerate">
+  <action name="actionStart_relax_tor">
    <property name="text">
-    <string>Regenerate</string>
+    <string>Strart relax tor</string>
    </property>
   </action>
  </widget>
