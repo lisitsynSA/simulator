@@ -19,12 +19,14 @@ SOURCES += \
     display.cpp \
     life.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    memory.cpp
 
 HEADERS += \
     display.h \
     life.h \
-    mainwindow.h
+    mainwindow.h \
+    memory.h
 
 FORMS += \
     mainwindow.ui
