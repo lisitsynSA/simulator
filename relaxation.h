@@ -13,6 +13,7 @@ public:
     ~Relaxation();
 public slots:
     void startRelaxation();
+    void stopRelaxation();
     void play();
 signals:
     void sendSpace(uint32_t* space, uint32_t width, uint32_t height);

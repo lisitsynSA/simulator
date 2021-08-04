@@ -11,6 +11,7 @@ public:
     ~Life();
 public slots:
     void startGame();
+    void stopGame();
     void addVirus();
     void addVirus(uint32_t x, uint32_t y);
     void addLife(uint32_t x, uint32_t y);

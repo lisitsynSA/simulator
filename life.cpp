@@ -1,6 +1,5 @@
 #include "life.h"
 #include <QTimer>
-#include <QDateTime>
 
 Life::Life(uint32_t xSize, uint32_t ySize, QObject *parent) :
     QObject(parent), m_xSize(xSize), m_ySize(ySize), m_ym(xSize + 2) {
@@ -8,10 +7,8 @@ Life::Life(uint32_t xSize, uint32_t ySize, QObject *parent) :
     m_tmp = new uint8_t[m_ym*(ySize + 2)];
     m_tmpNew = new uint8_t[m_ym*(ySize + 2)];
     m_virusQueue = 0;
-    generateSpace();
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(playGame()));
-    qsrand(QDateTime::currentDateTime().toTime_t());
 }
 
 Life::~Life() {
@@ -34,7 +31,13 @@ void Life::generateSpace() {
 }
 
 void Life::startGame() {
+    m_timer->stop();
+    generateSpace();
     m_timer->start(10);
+}
+
+void Life::stopGame() {
+    m_timer->stop();
 }
 
 void Life::addVirus() {

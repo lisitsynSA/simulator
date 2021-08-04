@@ -7,7 +7,6 @@ Relaxation::Relaxation(uint32_t xSize, uint32_t ySize, QObject *parent) :
 {
     m_space = new uint32_t[xSize*ySize];
     m_map = new uint32_t[xSize*ySize];
-    generateLocuses();
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(play()));
 }
@@ -21,7 +20,7 @@ void Relaxation::generateLocuses() {
     locuses.clear();
     for (uint32_t y = 0; y < m_ySize; y++)
     for (uint32_t x = 0; x < m_xSize; x++) {
-        if (qrand() % (m_ySize + m_xSize) == 0) {
+        if (qrand() % (m_ySize/2 + m_xSize/2) == 0) {
             // locus
             uint32_t color = 0xff000000 + (qrand() & 0xffffff);
             locuses.push_back(Locus(x, y, color, m_xSize));
@@ -34,7 +33,13 @@ void Relaxation::generateLocuses() {
 }
 
 void Relaxation::startRelaxation() {
+    m_timer->stop();
+    generateLocuses();
     m_timer->start(100);
+}
+
+void Relaxation::stopRelaxation() {
+    m_timer->stop();
 }
 
 void Relaxation::play() {

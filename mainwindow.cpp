@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     // Game of Life
     m_life = new Life(1000, 600, this);
     connect(ui->actionStart_life, SIGNAL(triggered(bool)), m_life, SLOT(startGame()));
+    connect(ui->actionStart_relax, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
+    connect(ui->actionStart_relax_tor, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
     connect(m_life, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
     connect(m_display, SIGNAL(leftClick(uint32_t,uint32_t)), m_life, SLOT(addLife(uint32_t,uint32_t)));
@@ -30,12 +32,16 @@ MainWindow::MainWindow(QWidget *parent)
     // Relaxation
     m_relax = new Relaxation(200, 200, this);
     connect(ui->actionStart_relax, SIGNAL(triggered(bool)), m_relax, SLOT(startRelaxation()));
+    connect(ui->actionStart_life, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
+    connect(ui->actionStart_relax_tor, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
     connect(m_relax, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
 
     // Tor Relaxation
     m_relaxTor = new RelaxationTor(200, 200, this);
     connect(ui->actionStart_relax_tor, SIGNAL(triggered(bool)), m_relaxTor, SLOT(startRelaxation()));
+    connect(ui->actionStart_life, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
+    connect(ui->actionStart_relax, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
     connect(m_relaxTor, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
 }
