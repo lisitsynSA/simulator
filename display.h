@@ -11,12 +11,12 @@ class mousePixmapItem : public QGraphicsPixmapItem
 {
 public:
     mousePixmapItem(Display *display, QGraphicsItem *parent = nullptr):
-        QGraphicsPixmapItem(parent), m_displ(display) {}
+        QGraphicsPixmapItem(parent), m_displ(display)
+    {}
 private:
     Display *m_displ;
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 };
 
 class Display : public QGraphicsView
