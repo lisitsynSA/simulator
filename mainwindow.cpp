@@ -5,6 +5,7 @@
 #include "life.h"
 #include "relaxation.h"
 #include "relaxationtor.h"
+#include "mapgenerator.h"
 #include <QDateTime>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -44,6 +45,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionStart_relax, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
     connect(m_relaxTor, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
+    // Map Generation
+    m_mapGen = new MapGenerator(200, 200, this);
+    connect(ui->actionLocus_gen, SIGNAL(triggered(bool)), m_mapGen, SLOT(generateLocuses()));
+    connect(ui->actionHeight_gen, SIGNAL(triggered(bool)), m_mapGen, SLOT(generateHeight()));
+    connect(m_mapGen, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
+            m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
+    connect(m_display, SIGNAL(leftClick(uint32_t,uint32_t)), m_mapGen, SLOT(select(uint32_t,uint32_t)));
 }
 
 MainWindow::~MainWindow()

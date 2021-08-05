@@ -21,6 +21,7 @@ SOURCES += \
     locus.cpp \
     main.cpp \
     mainwindow.cpp \
+    mapgenerator.cpp \
     memory.cpp \
     relaxation.cpp \
     relaxationtor.cpp
@@ -30,6 +31,7 @@ HEADERS += \
     life.h \
     locus.h \
     mainwindow.h \
+    mapgenerator.h \
     memory.h \
     relaxation.h \
     relaxationtor.h

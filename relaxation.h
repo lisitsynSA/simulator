@@ -11,6 +11,9 @@ class Relaxation : public QObject
 public:
     explicit Relaxation(uint32_t xSize, uint32_t ySize, QObject *parent = nullptr);
     ~Relaxation();
+    void copyLocuses(std::vector<Locus> *locuses);
+    void generateLocuses();
+    virtual void relax();
 public slots:
     void startRelaxation();
     void stopRelaxation();
@@ -20,14 +23,11 @@ signals:
 protected:
     uint32_t m_xSize;
     uint32_t m_ySize;
-    uint32_t *m_map;
     uint32_t *m_space;
     QTimer *m_timer;
-    std::vector<Locus> locuses;
+    std::vector<Locus> m_locuses;
 
-    void generateLocuses();
     void drawSpace();
-    virtual void relax();
     void gatherPoints();
     virtual uint32_t dist(Locus &locus, uint32_t x, uint32_t y);
 };

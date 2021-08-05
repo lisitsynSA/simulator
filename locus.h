@@ -17,12 +17,10 @@ public:
     void add(uint32_t point) {
         m_points.push_back(point);
     }
-    uint32_t getX() { return m_x; }
-    uint32_t getY() { return m_y; }
-    uint32_t getColor() { return m_color; }
-private:
+    void calcColor();
     uint32_t m_x;
     uint32_t m_y;
+    uint32_t m_z;
     uint32_t m_color;
     uint32_t m_xSize;
     uint32_t m_ySize;

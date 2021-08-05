@@ -51,3 +51,22 @@ void Locus::relaxTor() {
     m_x = (xEdged) ? x_edge : x_midd;
     m_y = (yEdged) ? y_edge : y_midd;
 }
+
+void Locus::calcColor() {
+    if (m_z < 0x20) {
+        // water
+        m_color = 0xff8080ff;
+    } else if (m_z < 0x40) {
+        // sand
+        m_color = 0xfffff080;
+    } else if (m_z < 0xa0) {
+        // forest
+        m_color = 0xff208000;
+    } else if (m_z < 0xe0) {
+        // mount
+        m_color = 0xff805000;
+    } else {
+        // snow
+        m_color = 0xffffffff;
+    }
+}

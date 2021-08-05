@@ -43,7 +43,15 @@
     <addaction name="actionStart_relax"/>
     <addaction name="actionStart_relax_tor"/>
    </widget>
+   <widget class="QMenu" name="menuMapGen">
+    <property name="title">
+     <string>MapGen</string>
+    </property>
+    <addaction name="actionLocus_gen"/>
+    <addaction name="actionHeight_gen"/>
+   </widget>
    <addaction name="menuDemo"/>
+   <addaction name="menuMapGen"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -70,6 +78,16 @@
   <action name="actionStart_relax_tor">
    <property name="text">
     <string>Strart relax tor</string>
+   </property>
+  </action>
+  <action name="actionLocus_gen">
+   <property name="text">
+    <string>Locus gen</string>
+   </property>
+  </action>
+  <action name="actionHeight_gen">
+   <property name="text">
+    <string>Height gen</string>
    </property>
   </action>
  </widget>

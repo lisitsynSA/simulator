@@ -2,7 +2,7 @@
 #include "locus.h"
 
 void RelaxationTor::relax() {
-    for(Locus& locus: locuses) {
+    for(Locus& locus: m_locuses) {
         locus.relaxTor();
         locus.clear();
     }
@@ -10,10 +10,10 @@ void RelaxationTor::relax() {
 }
 
 uint32_t RelaxationTor::dist(Locus &locus, uint32_t x, uint32_t y) {
-    uint32_t x1 = std::min(locus.getX(), x);
-    uint32_t x2 = std::max(locus.getX(), x);
-    uint32_t y1 = std::min(locus.getY(), y);
-    uint32_t y2 = std::max(locus.getY(), y);
+    uint32_t x1 = std::min(locus.m_x, x);
+    uint32_t x2 = std::max(locus.m_x, x);
+    uint32_t y1 = std::min(locus.m_y, y);
+    uint32_t y2 = std::max(locus.m_y, y);
     uint32_t x_midd = x2 - x1;
     uint32_t x_edge = m_xSize - x_midd;
     uint32_t y_midd = y2 - y1;

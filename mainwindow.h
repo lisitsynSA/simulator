@@ -7,6 +7,7 @@ class Memory;
 class Life;
 class Relaxation;
 class RelaxationTor;
+class MapGenerator;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,5 +28,6 @@ private:
     Life *m_life;
     Relaxation *m_relax;
     RelaxationTor *m_relaxTor;
+    MapGenerator *m_mapGen;
 };
 #endif // MAINWINDOW_H
