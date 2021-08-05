@@ -24,6 +24,7 @@ protected:
     std::map<uint32_t, Locus*> m_locusMap;
 
     void drawSpace();
+    void findNeighbors(Locus &locus);
     uint32_t dist(Locus &locus1, Locus &locus2);
 };
 

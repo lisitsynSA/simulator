@@ -18,6 +18,7 @@ public:
         m_points.push_back(point);
     }
     void calcColor();
+    void addNeighbor(Locus* locus);
     uint32_t m_x;
     uint32_t m_y;
     uint32_t m_z;
@@ -25,6 +26,7 @@ public:
     uint32_t m_xSize;
     uint32_t m_ySize;
     std::vector<uint32_t> m_points;
+    std::vector<Locus*> m_neighbors;
 };
 
 #endif // LOCUS_H

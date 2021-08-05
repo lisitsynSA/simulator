@@ -52,6 +52,18 @@ void Locus::relaxTor() {
     m_y = (yEdged) ? y_edge : y_midd;
 }
 
+void Locus::addNeighbor(Locus* locus) {
+    if (locus == this) {
+        return;
+    }
+    for (Locus* neighbor: m_neighbors) {
+        if (neighbor == locus) {
+            return;
+        }
+    }
+    m_neighbors.push_back(locus);
+}
+
 void Locus::calcColor() {
     if (m_z < 0x20) {
         // water
