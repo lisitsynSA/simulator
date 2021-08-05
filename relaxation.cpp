@@ -23,7 +23,7 @@ void Relaxation::generateLocuses() {
         if (qrand() % (m_ySize/2 + m_xSize/2) == 0) {
             // locus
             uint32_t color = 0xff000000 + (qrand() & 0xffffff);
-            locuses.push_back(Locus(x, y, color, m_xSize));
+            locuses.push_back(Locus(x, y, color, m_xSize, m_ySize));
             m_space[y*m_xSize + x] = color;
         } else {
             m_space[y*m_xSize + x] = 0xff000000;

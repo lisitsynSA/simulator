@@ -6,8 +6,8 @@
 class Locus
 {
 public:
-    Locus(uint32_t x, uint32_t y, uint32_t color, uint32_t size) :
-        m_x(x), m_y(y), m_color(color), m_size(size) {}
+    Locus(uint32_t x, uint32_t y, uint32_t color, uint32_t xSize, uint32_t ySize) :
+        m_x(x), m_y(y), m_color(color), m_xSize(xSize), m_ySize(ySize) {}
     void drawSpace(uint32_t *space);
     void relax();
     void relaxTor();
@@ -24,7 +24,8 @@ private:
     uint32_t m_x;
     uint32_t m_y;
     uint32_t m_color;
-    uint32_t m_size;
+    uint32_t m_xSize;
+    uint32_t m_ySize;
     std::vector<uint32_t> m_points;
 };
 
