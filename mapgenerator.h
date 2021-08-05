@@ -22,6 +22,8 @@ protected:
     uint32_t *m_space;
     std::vector<Locus> m_locuses;
     std::map<uint32_t, Locus*> m_locusMap;
+    uint32_t m_maxZ;
+    uint32_t m_minZ;
 
     void drawSpace();
     void findNeighbors(Locus &locus);

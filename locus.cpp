@@ -64,21 +64,31 @@ void Locus::addNeighbor(Locus* locus) {
     m_neighbors.push_back(locus);
 }
 
-void Locus::calcColor() {
-    if (m_z < 0x20) {
-        // water
-        m_color = 0xff8080ff;
-    } else if (m_z < 0x40) {
-        // sand
-        m_color = 0xfffff080;
-    } else if (m_z < 0xa0) {
-        // forest
-        m_color = 0xff208000;
-    } else if (m_z < 0xe0) {
-        // mount
-        m_color = 0xff805000;
-    } else {
-        // snow
-        m_color = 0xffffffff;
+void Locus::averageZ() {
+    if (m_neighbors.empty()) {
+        return;
     }
+    /*m_z = 0;
+    for (Locus* neighbor: m_neighbors) {
+        m_z += neighbor->m_z;
+    }
+    m_z /= m_neighbors.size();*/
+
+    uint32_t minZ = 0xffffffff;
+    Locus *minLocus = nullptr;
+    for (Locus* neighbor: m_neighbors) {
+        if (!neighbor->m_average && minZ > neighbor->m_z) {
+            minZ = neighbor->m_z;
+            minLocus = neighbor;
+        }
+    }
+    if (minLocus != nullptr && minZ > m_z) {
+        minLocus->m_z = m_z;
+        minLocus->m_average = true;
+    }
+}
+
+void Locus::calcColor(uint32_t maxZ, uint32_t minZ) {
+    double stepZ = 255.0 / (maxZ - minZ);
+    m_color = 0xff000000 + stepZ*(m_z - minZ);
 }
