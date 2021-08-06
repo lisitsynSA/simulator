@@ -15,16 +15,18 @@ public:
     void generateLocuses();
     virtual void relax();
 public slots:
-    void startRelaxation();
-    void stopRelaxation();
+    virtual void startRelaxation(int32_t repeat = -1);
+    virtual void stopRelaxation();
     void play();
 signals:
     void sendSpace(uint32_t* space, uint32_t width, uint32_t height);
+    void finishRelax();
 protected:
     uint32_t m_xSize;
     uint32_t m_ySize;
     uint32_t *m_space;
     QTimer *m_timer;
+    int32_t m_repeat;
     std::vector<Locus> m_locuses;
 
     void drawSpace();

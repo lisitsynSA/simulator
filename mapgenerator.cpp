@@ -2,33 +2,28 @@
 #include "locus.h"
 #include "relaxationtor.h"
 #include <QDebug>
+#include <QTimer>
 
-MapGenerator::MapGenerator(uint32_t xSize, uint32_t ySize, QObject *parent) :
-    QObject(parent), m_xSize(xSize), m_ySize(ySize)
-{
-    m_space = new uint32_t[xSize*ySize];
+void MapGenerator::startRelaxation(int32_t repeat) {
+    m_timer->stop();
+    generateLocuses();
+    m_repeat = repeat;
+    m_timer->start(100);
 }
 
-MapGenerator::~MapGenerator() {
-    delete m_space;
-}
-
-void MapGenerator::generateLocuses() {
-    RelaxationTor relaxTor(m_xSize, m_ySize, this);
-    relaxTor.generateLocuses();
-    relaxTor.relax();
-    relaxTor.relax();
-    relaxTor.copyLocuses(&m_locuses);
+void MapGenerator::stopRelaxation() {
+    m_timer->stop();
     for (Locus& locus: m_locuses) {
-        for (uint32_t& point: locus.m_points) {
-            m_locusMap[point] = &locus;
-        }
+       for (uint32_t& point: locus.m_points) {
+           m_locusMap[point] = &locus;
+       }
     }
     for (Locus& locus: m_locuses) {
         findNeighbors(locus);
     }
     drawSpace();
     emit sendSpace(m_space, m_xSize, m_ySize);
+    emit finishRelax();
 }
 
 void MapGenerator::findNeighbors(Locus &locus) {
@@ -83,10 +78,4 @@ void MapGenerator::select(uint32_t x, uint32_t y) {
         neighbor->drawSpace(m_space);
     }
     emit sendSpace(m_space, m_xSize, m_ySize);
-}
-
-void MapGenerator::drawSpace() {
-    for(Locus& locus: m_locuses) {
-        locus.drawSpace(m_space);
-    }
 }

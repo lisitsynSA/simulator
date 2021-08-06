@@ -34,20 +34,28 @@ void Relaxation::copyLocuses(std::vector<Locus> *locuses) {
     }
 }
 
-void Relaxation::startRelaxation() {
+void Relaxation::startRelaxation(int32_t repeat) {
     m_timer->stop();
     generateLocuses();
+    m_repeat = repeat;
     m_timer->start(100);
 }
 
 void Relaxation::stopRelaxation() {
     m_timer->stop();
+    emit finishRelax();
 }
 
 void Relaxation::play() {
     drawSpace();
     emit sendSpace(m_space, m_xSize, m_ySize);
     relax();
+    if (m_repeat != -1) {
+        m_repeat--;
+        if (m_repeat == 0) {
+            stopRelaxation();
+        }
+    }
 }
 
 void Relaxation::relax() {
