@@ -54,8 +54,10 @@ void MapGenerator::findNeighbors(Locus &locus) {
 void MapGenerator::generateHeight(int32_t repeat) {
     // Mountains
     for(Locus& locus: m_locuses) {
-        if ((qrand() % (m_xSize/5 + m_ySize/5)) == 0){
-            locus.m_z = 0xff;
+        if ((0.1*m_xSize < locus.m_x) && (locus.m_x < 0.9*m_xSize) &&
+            (0.1*m_ySize < locus.m_y) && (locus.m_y < 0.9*m_ySize) &&
+                ((qrand() % m_locuses.size()/30) == 0)) {
+            locus.m_z = 0x80 + (qrand() & 0x7f);
             locus.m_fixZ = true;
         } else {
             locus.m_z = qrand() & 0xff;
@@ -89,8 +91,6 @@ void MapGenerator::heightRelaxation() {
     for(Locus& locus: m_locuses) {
         locus.calcHeightColor();
     }
-    drawSpace();
-    emit sendSpace(m_space, m_xSize, m_ySize);
     if (m_repeat != -1) {
         m_repeat--;
         if (m_repeat == 0) {
@@ -98,12 +98,15 @@ void MapGenerator::heightRelaxation() {
             addMapRand();
         }
     }
+    drawSpace();
+    emit sendSpace(m_space, m_xSize, m_ySize);
 }
 
 void MapGenerator::addMapRand() {
     for(Locus& locus: m_locuses) {
         if (!locus.m_fixZ) {
-            locus.m_z += qrand() & 0x3f;
+            locus.m_z += qrand() & 0xf;
+            locus.calcHeightColor();
         }
     }
 }
