@@ -20,6 +20,8 @@ public:
     void calcHeightColor();
     void addNeighbor(Locus* locus);
     void averageZ();
+    Locus* minNeighbor();
+    Locus* minNonRiver();
     uint32_t m_x;
     uint32_t m_y;
     uint32_t m_z;
@@ -29,6 +31,7 @@ public:
     std::vector<uint32_t> m_points;
     std::vector<Locus*> m_neighbors;
     bool m_fixZ = false;
+    bool m_river = false;
 };
 
 #endif // LOCUS_H

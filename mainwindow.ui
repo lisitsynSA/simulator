@@ -49,6 +49,7 @@
     </property>
     <addaction name="actionLocus_gen"/>
     <addaction name="actionHeight_gen"/>
+    <addaction name="actionRiver_gen"/>
    </widget>
    <addaction name="menuDemo"/>
    <addaction name="menuMapGen"/>
@@ -88,6 +89,11 @@
   <action name="actionHeight_gen">
    <property name="text">
     <string>Height gen</string>
+   </property>
+  </action>
+  <action name="actionRiver_gen">
+   <property name="text">
+    <string>River gen</string>
    </property>
   </action>
  </widget>

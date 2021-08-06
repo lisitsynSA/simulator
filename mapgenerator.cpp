@@ -8,6 +8,8 @@ MapGenerator::MapGenerator(uint32_t xSize, uint32_t ySize, QObject *parent) :
     RelaxationTor(xSize, ySize, parent) {
     m_hTimer = new QTimer(this);
     connect(m_hTimer, SIGNAL(timeout()), this, SLOT(heightRelaxation()));
+    m_rTimer = new QTimer(this);
+    connect(m_rTimer, SIGNAL(timeout()), this, SLOT(riverFlow()));
 }
 
 void MapGenerator::startRelaxation(int32_t repeat) {
@@ -81,7 +83,7 @@ void MapGenerator::generateHeight(int32_t repeat) {
     drawSpace();
     emit sendSpace(m_space, m_xSize, m_ySize);
     m_repeat = repeat;
-    m_hTimer->start(1000);
+    m_hTimer->start(100);
 }
 
 void MapGenerator::heightRelaxation() {
@@ -105,7 +107,7 @@ void MapGenerator::heightRelaxation() {
 void MapGenerator::addMapRand() {
     for(Locus& locus: m_locuses) {
         if (!locus.m_fixZ) {
-            locus.m_z += qrand() & 0xf;
+            locus.m_z += qrand() & 0x1f;
             locus.calcHeightColor();
         }
     }
@@ -119,5 +121,47 @@ void MapGenerator::select(uint32_t x, uint32_t y) {
         neighbor->m_color = 0xffffa000;
         neighbor->drawSpace(m_space);
     }
+    emit sendSpace(m_space, m_xSize, m_ySize);
+}
+
+void MapGenerator::riverGeneration() {
+    // River source
+    for(Locus& locus: m_locuses) {
+        if (!locus.m_fixZ && locus.m_z > 0x40 &&
+                (qrand() % m_locuses.size()/30) == 0) {
+            locus.m_river = true;
+        }
+        locus.calcHeightColor();
+    }
+    drawSpace();
+    emit sendSpace(m_space, m_xSize, m_ySize);
+    m_rTimer->start(1000);
+}
+
+void MapGenerator::riverFlow() {
+    std::vector<Locus*> newRiver;
+    for(Locus& locus: m_locuses) {
+        if (locus.m_river) {
+            Locus* flow = locus.minNeighbor();
+            if (!flow->m_river) {
+                newRiver.push_back(flow);
+            } else {
+                if (flow->m_z > locus.m_z) {
+                    flow = locus.minNonRiver();
+                    if (flow != nullptr) {
+                        newRiver.push_back(flow);
+                    }
+                }
+            }
+        }
+    }
+    if (newRiver.empty()) {
+        m_rTimer->stop();
+    }
+    for (Locus* locus: newRiver) {
+        locus->m_river = true;
+        locus->calcHeightColor();
+    }
+    drawSpace();
     emit sendSpace(m_space, m_xSize, m_ySize);
 }

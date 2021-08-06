@@ -73,21 +73,35 @@ void Locus::averageZ() {
         m_z += neighbor->m_z;
     }
     m_z /= m_neighbors.size();
+}
 
-    /*uint32_t minZ = 0xffffffff;
+Locus* Locus::minNeighbor() {
+    uint32_t minZ = 0xffffffff;
     Locus *minLocus = nullptr;
     for (Locus* neighbor: m_neighbors) {
-        if (!neighbor->m_average && minZ > neighbor->m_z) {
+        if (minZ > neighbor->m_z) {
             minZ = neighbor->m_z;
             minLocus = neighbor;
         }
     }
-    if (minLocus != nullptr && minZ > m_z) {
-        minLocus->m_z = m_z;
-        minLocus->m_average = true;
-    }*/
+    return minLocus;
+}
+
+Locus* Locus::minNonRiver() {
+    uint32_t minZ = 0xffffffff;
+    Locus *minLocus = nullptr;
+    for (Locus* neighbor: m_neighbors) {
+        if (minZ > neighbor->m_z && !neighbor->m_river) {
+            minZ = neighbor->m_z;
+            minLocus = neighbor;
+        }
+    }
+    return minLocus;
 }
 
 void Locus::calcHeightColor() {
     m_color = 0xff000000 + m_z;
+    if (m_river) {
+        m_color += m_z*0x100;
+    }
 }

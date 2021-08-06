@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_mapGen = new MapGenerator(400, 400, this);
     connect(ui->actionLocus_gen, SIGNAL(triggered(bool)), m_mapGen, SLOT(startRelaxation()));
     connect(ui->actionHeight_gen, SIGNAL(triggered(bool)), m_mapGen, SLOT(generateHeight()));
+    connect(ui->actionRiver_gen, SIGNAL(triggered(bool)), m_mapGen, SLOT(riverGeneration()));
     connect(m_mapGen, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
     connect(m_display, SIGNAL(leftClick(uint32_t,uint32_t)), m_mapGen, SLOT(select(uint32_t,uint32_t)));
