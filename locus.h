@@ -17,7 +17,7 @@ public:
     void add(uint32_t point) {
         m_points.push_back(point);
     }
-    void calcColor(uint32_t maxZ, uint32_t minZ);
+    void calcHeightColor();
     void addNeighbor(Locus* locus);
     void averageZ();
     uint32_t m_x;
@@ -28,7 +28,7 @@ public:
     uint32_t m_ySize;
     std::vector<uint32_t> m_points;
     std::vector<Locus*> m_neighbors;
-    bool m_average = false;
+    bool m_fixZ = false;
 };
 
 #endif // LOCUS_H

@@ -65,16 +65,16 @@ void Locus::addNeighbor(Locus* locus) {
 }
 
 void Locus::averageZ() {
-    if (m_neighbors.empty()) {
+    if (m_fixZ || m_neighbors.empty()) {
         return;
     }
-    /*m_z = 0;
+    m_z = 0;
     for (Locus* neighbor: m_neighbors) {
         m_z += neighbor->m_z;
     }
-    m_z /= m_neighbors.size();*/
+    m_z /= m_neighbors.size();
 
-    uint32_t minZ = 0xffffffff;
+    /*uint32_t minZ = 0xffffffff;
     Locus *minLocus = nullptr;
     for (Locus* neighbor: m_neighbors) {
         if (!neighbor->m_average && minZ > neighbor->m_z) {
@@ -85,10 +85,9 @@ void Locus::averageZ() {
     if (minLocus != nullptr && minZ > m_z) {
         minLocus->m_z = m_z;
         minLocus->m_average = true;
-    }
+    }*/
 }
 
-void Locus::calcColor(uint32_t maxZ, uint32_t minZ) {
-    double stepZ = 255.0 / (maxZ - minZ);
-    m_color = 0xff000000 + stepZ*(m_z - minZ);
+void Locus::calcHeightColor() {
+    m_color = 0xff000000 + m_z;
 }
