@@ -12,6 +12,7 @@ public:
     void relax();
 private:
     uint32_t dist(Locus &locus, uint32_t x, uint32_t y);
+    bool drawLocusEdge(Locus *locus, uint32_t len);
 };
 
 #endif // RELAXATIONTOR_H

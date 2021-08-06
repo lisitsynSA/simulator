@@ -24,7 +24,8 @@ void Relaxation::generateLocuses() {
             m_locuses.push_back(Locus(x, y, color, m_xSize, m_ySize));
         }
     }
-    gatherPoints();
+    //gatherPoints();
+    gatherPointsFast();
 }
 
 
@@ -63,7 +64,8 @@ void Relaxation::relax() {
         locus.relax();
         locus.clear();
     }
-    gatherPoints();
+    //gatherPoints();
+    gatherPointsFast();
 }
 
 void Relaxation::drawSpace() {
@@ -86,6 +88,64 @@ void Relaxation::gatherPoints() {
         }
         resLocus->add(y*m_xSize + x);
     }
+}
+
+void Relaxation::gatherPointsFast() {
+    for (uint32_t i = 0; i < m_ySize*m_xSize; i++) {
+        m_space[i] = 0;
+    }
+    bool changed = true;
+    for(Locus& locus: m_locuses) {
+        m_space[locus.m_y*m_xSize + locus.m_x] = locus.m_color;
+        locus.add(locus.m_y*m_xSize + locus.m_x);
+    }
+    uint32_t len = 1;
+    while (changed) {
+        changed = false;
+        for(Locus& locus: m_locuses) {
+            changed |= drawLocusEdge(&locus, len);
+        }
+        len++;
+    }
+}
+
+bool Relaxation::drawLocusEdge(Locus *locus, uint32_t len) {
+    bool changed = false;
+    for (uint32_t i = 0; i <= len; i++) {
+        int32_t x_l = locus->m_x - i;
+        int32_t x_r = locus->m_x + i;
+        int32_t y_u = locus->m_y - len + i;
+        int32_t y_d = locus->m_y + len - i;
+        if (0 <= x_l && x_l < (int32_t)m_xSize &&
+            0 <= y_u && y_u < (int32_t)m_ySize &&
+                m_space[y_u*m_xSize + x_l] == 0) {
+            m_space[y_u*m_xSize + x_l] = locus->m_color;
+            locus->add(y_u*m_xSize + x_l);
+            changed = true;
+        }
+        if (0 <= x_l && x_l < (int32_t)m_xSize &&
+            0 <= y_d && y_d < (int32_t)m_ySize &&
+                m_space[y_d*m_xSize + x_l] == 0) {
+            m_space[y_d*m_xSize + x_l] = locus->m_color;
+            locus->add(y_d*m_xSize + x_l);
+            changed = true;
+        }
+        if (0 <= x_r && x_r < (int32_t)m_xSize &&
+            0 <= y_u && y_u < (int32_t)m_ySize &&
+                m_space[y_u*m_xSize + x_r] == 0) {
+            m_space[y_u*m_xSize + x_r] = locus->m_color;
+            locus->add(y_u*m_xSize + x_r);
+            changed = true;
+        }
+        if (0 <= x_r && x_r < (int32_t)m_xSize &&
+            0 <= y_d && y_d < (int32_t)m_ySize &&
+                m_space[y_d*m_xSize + x_r] == 0) {
+            m_space[y_d*m_xSize + x_r] = locus->m_color;
+            locus->add(y_d*m_xSize + x_r);
+            changed = true;
+        }
+    }
+    return changed;
 }
 
 uint32_t Relaxation::dist(Locus &locus, uint32_t x, uint32_t y) {

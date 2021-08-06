@@ -21,6 +21,12 @@ void MapGenerator::startRelaxation(int32_t repeat) {
 
 void MapGenerator::stopRelaxation() {
     m_timer->stop();
+
+    for(Locus& locus: m_locuses) {
+        locus.clear();
+    }
+    gatherPoints();
+
     for (Locus& locus: m_locuses) {
        for (uint32_t& point: locus.m_points) {
            m_locusMap[point] = &locus;

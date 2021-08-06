@@ -31,7 +31,9 @@ protected:
 
     void drawSpace();
     void gatherPoints();
+    void gatherPointsFast();
     virtual uint32_t dist(Locus &locus, uint32_t x, uint32_t y);
+    virtual bool drawLocusEdge(Locus *locus, uint32_t len);
 };
 
 #endif // RELAXATION_H
