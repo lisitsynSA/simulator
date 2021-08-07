@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_relaxTor, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
     // Map Generation
-    m_mapGen = new MapGenerator(400, 400, this);
+    m_mapGen = new MapGenerator(1200, 600, this);
     connect(ui->actionLocus_gen, SIGNAL(triggered(bool)), m_mapGen, SLOT(startRelaxation()));
     connect(ui->actionHeight_gen, SIGNAL(triggered(bool)), m_mapGen, SLOT(generateHeight()));
     connect(ui->actionRiver_gen, SIGNAL(triggered(bool)), m_mapGen, SLOT(riverGeneration()));

@@ -1,6 +1,7 @@
 #include "relaxation.h"
 #include "locus.h"
 #include <QTimer>
+#include <QDebug>
 
 Relaxation::Relaxation(uint32_t xSize, uint32_t ySize, QObject *parent) :
     QObject(parent), m_xSize(xSize), m_ySize(ySize)
@@ -18,7 +19,7 @@ void Relaxation::generateLocuses() {
     m_locuses.clear();
     for (uint32_t y = 0; y < m_ySize; y++)
     for (uint32_t x = 0; x < m_xSize; x++) {
-        if (qrand() % (m_ySize + m_xSize)/5 == 0) {
+        if (qrand() % 100 == 0) {
             // locus
             uint32_t color = 0xff000000 + (qrand() & 0xffffff);
             m_locuses.push_back(Locus(x, y, color, m_xSize, m_ySize));
@@ -75,6 +76,7 @@ void Relaxation::drawSpace() {
 }
 
 void Relaxation::gatherPoints() {
+#pragma omp parallel for
     for (uint32_t y = 0; y < m_ySize; y++)
     for (uint32_t x = 0; x < m_xSize; x++) {
         uint32_t min = m_ySize*m_ySize + m_xSize*m_xSize;

@@ -113,7 +113,7 @@ void MapGenerator::heightRelaxation() {
 void MapGenerator::addMapRand() {
     for(Locus& locus: m_locuses) {
         if (!locus.m_fixZ) {
-            locus.m_z += qrand() & 0x1f;
+            locus.m_z += qrand() & 0xf;
             locus.calcHeightColor();
         }
     }
@@ -134,7 +134,7 @@ void MapGenerator::riverGeneration() {
     // River source
     for(Locus& locus: m_locuses) {
         if (!locus.m_fixZ && locus.m_z > 0x40 &&
-                (qrand() % m_locuses.size()/30) == 0) {
+                (qrand() % m_locuses.size()/50) == 0) {
             locus.m_river = true;
         }
         locus.calcHeightColor();
