@@ -19,14 +19,14 @@ void Relaxation::generateLocuses() {
     m_locuses.clear();
     for (uint32_t y = 0; y < m_ySize; y++)
     for (uint32_t x = 0; x < m_xSize; x++) {
-        if (qrand() % 100 == 0) {
+        if (qrand() % 200 == 0) {
             // locus
             uint32_t color = 0xff000000 + (qrand() & 0xffffff);
             m_locuses.push_back(Locus(x, y, color, m_xSize, m_ySize));
         }
     }
-    //gatherPoints();
-    gatherPointsFast();
+    gatherPoints();
+    //gatherPointsFast();
 }
 
 
@@ -65,8 +65,8 @@ void Relaxation::relax() {
         locus.relax();
         locus.clear();
     }
-    //gatherPoints();
-    gatherPointsFast();
+    gatherPoints();
+    //gatherPointsFast();
 }
 
 void Relaxation::drawSpace() {
