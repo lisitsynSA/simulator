@@ -21,7 +21,9 @@ void Relaxation::generateLocuses() {
     for (uint32_t x = 0; x < m_xSize; x++) {
         if (qrand() % 200 == 0) {
             // locus
-            uint32_t color = 0xff000000 + (qrand() & 0xffffff);
+            uint32_t color = 0xff000000 + (qrand() & 0xff)
+                                        + ((qrand() & 0xff) << 8)
+                                        + ((qrand() & 0xff) << 16);
             m_locuses.push_back(Locus(x, y, color, m_xSize, m_ySize));
         }
     }
@@ -88,7 +90,10 @@ void Relaxation::gatherPoints() {
                 min = distance;
             }
         }
-        resLocus->add(y*m_xSize + x);
+        if (resLocus) {
+#pragma omp critical
+            resLocus->add(y*m_xSize + x);
+        }
     }
 }
 

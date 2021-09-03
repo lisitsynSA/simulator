@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    qsrand(QDateTime::currentDateTime().toTime_t());
+    qsrand(QDateTime::currentDateTimeUtc().toTime_t());
     setCentralWidget(ui->gridLayoutWidget);
     m_display = new Display(this);
     ui->gridLayoutWidget->layout()->addWidget(m_display);
