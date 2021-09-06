@@ -120,6 +120,9 @@ void MapGenerator::addMapRand() {
 }
 
 void MapGenerator::select(uint32_t x, uint32_t y) {
+    if (m_locusMap.empty()) {
+        return;
+    }
     Locus* locus = m_locusMap[y*m_xSize + x];
     locus->m_color = 0xffff0000;
     locus->drawSpace(m_space);

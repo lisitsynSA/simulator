@@ -32,27 +32,33 @@
      <x>0</x>
      <y>0</y>
      <width>646</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDemo">
     <property name="title">
      <string>Demo</string>
     </property>
+    <widget class="QMenu" name="menuMapGen">
+     <property name="title">
+      <string>MapGen</string>
+     </property>
+     <addaction name="actionLocusGen"/>
+     <addaction name="actionHeightGen"/>
+     <addaction name="actionRiverGen"/>
+    </widget>
     <addaction name="actionStart_life"/>
     <addaction name="actionStart_relax"/>
     <addaction name="actionStart_relax_tor"/>
+    <addaction name="menuMapGen"/>
    </widget>
-   <widget class="QMenu" name="menuMapGen">
+   <widget class="QMenu" name="menuCPU">
     <property name="title">
-     <string>MapGen</string>
+     <string>CPU</string>
     </property>
-    <addaction name="actionLocus_gen"/>
-    <addaction name="actionHeight_gen"/>
-    <addaction name="actionRiver_gen"/>
    </widget>
+   <addaction name="menuCPU"/>
    <addaction name="menuDemo"/>
-   <addaction name="menuMapGen"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -94,6 +100,21 @@
   <action name="actionRiver_gen">
    <property name="text">
     <string>River gen</string>
+   </property>
+  </action>
+  <action name="actionLocusGen">
+   <property name="text">
+    <string>LocusGen</string>
+   </property>
+  </action>
+  <action name="actionHeightGen">
+   <property name="text">
+    <string>HeightGen</string>
+   </property>
+  </action>
+  <action name="actionRiverGen">
+   <property name="text">
+    <string>RiverGen</string>
    </property>
   </action>
  </widget>

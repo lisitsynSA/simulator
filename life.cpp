@@ -28,6 +28,18 @@ void Life::generateSpace() {
             m_tmp[y*m_ym + x] = 0;
         }
     }
+    for (uint32_t y = 1; y <= m_ySize; y++) {
+        m_tmp[y*m_ym] = m_tmp[y*m_ym + m_xSize];
+        m_tmp[y*m_ym + m_xSize + 1] = m_tmp[y*m_ym + 1];
+    }
+    for (uint32_t x = 1; x <= m_xSize; x++) {
+        m_tmp[x] = m_tmp[m_ySize*m_ym + x];
+        m_tmp[(m_ySize + 1)*m_ym + x] = m_tmp[m_ym + x];
+    }
+    m_tmp[0] = m_tmp[m_ySize*m_ym + m_xSize];
+    m_tmp[(m_ySize + 1)*m_ym + m_xSize + 1] = m_tmp[m_ym + 1];
+    m_tmp[m_xSize + 1] = m_tmp[m_ySize*m_ym + 1];
+    m_tmp[(m_ySize + 1)*m_ym] = m_tmp[m_ym + m_xSize];
 }
 
 void Life::startGame() {
@@ -45,11 +57,15 @@ void Life::addVirus() {
 }
 
 void Life::addVirus(uint32_t x, uint32_t y) {
-    m_tmp[y*m_ym + x] = 3;
+    if (m_timer->isActive()) {
+        m_tmp[y*m_ym + x] = 3;
+    }
 }
 
 void Life::addLife(uint32_t x, uint32_t y) {
-    m_tmp[y*m_ym + x] = 1;
+    if (m_timer->isActive()) {
+        m_tmp[y*m_ym + x] = 1;
+    }
 }
 
 void Life::playGame() {
