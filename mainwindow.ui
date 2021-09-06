@@ -23,7 +23,34 @@
       <height>391</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout"/>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="1">
+      <widget class="QTextEdit" name="codeEdit">
+       <property name="maximumSize">
+        <size>
+         <width>300</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPlainTextEdit" name="hexEdit">
+       <property name="maximumSize">
+        <size>
+         <width>300</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" rowspan="2">
+      <layout class="QGridLayout" name="displayLayout"/>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -56,6 +83,8 @@
     <property name="title">
      <string>CPU</string>
     </property>
+    <addaction name="actionLoad_code"/>
+    <addaction name="actionRun_code"/>
    </widget>
    <addaction name="menuCPU"/>
    <addaction name="menuDemo"/>
@@ -115,6 +144,16 @@
   <action name="actionRiverGen">
    <property name="text">
     <string>RiverGen</string>
+   </property>
+  </action>
+  <action name="actionLoad_code">
+   <property name="text">
+    <string>Load code</string>
+   </property>
+  </action>
+  <action name="actionRun_code">
+   <property name="text">
+    <string>Run code</string>
    </property>
   </action>
  </widget>

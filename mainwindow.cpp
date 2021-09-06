@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     qsrand(QDateTime::currentDateTimeUtc().toTime_t());
     setCentralWidget(ui->gridLayoutWidget);
     m_display = new Display(this);
-    ui->gridLayoutWidget->layout()->addWidget(m_display);
+    ui->displayLayout->layout()->addWidget(m_display);
     //m_mem = new Memory(this);
     //ui->gridLayoutWidget->layout()->addWidget(m_mem);
 
