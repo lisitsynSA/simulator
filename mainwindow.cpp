@@ -6,6 +6,7 @@
 #include "relaxation.h"
 #include "relaxationtor.h"
 #include "mapgenerator.h"
+#include "cpu.h"
 #include <QDateTime>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -53,6 +54,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_mapGen, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
     connect(m_display, SIGNAL(leftClick(uint32_t,uint32_t)), m_mapGen, SLOT(select(uint32_t,uint32_t)));
+
+    // CPU
+    m_cpu = new CPU(this);
+    connect(ui->actionLoad_code, SIGNAL(triggered(bool)), this, SLOT(loadCode()));
+    connect(ui->actionRun_code, SIGNAL(triggered(bool)), m_cpu, SLOT(run()));
+    connect(m_cpu, SIGNAL(statusUpd(QString)), ui->cpuEdit, SLOT(setPlainText(QString)));
+    connect(m_cpu, SIGNAL(memUpd(QString)), ui->hexEdit, SLOT(setPlainText(QString)));
+}
+
+void MainWindow::loadCode() {
+    m_cpu->readInstrs(ui->codeEdit->toPlainText());
 }
 
 MainWindow::~MainWindow()

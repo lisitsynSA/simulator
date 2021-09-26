@@ -8,6 +8,7 @@ class Life;
 class Relaxation;
 class RelaxationTor;
 class MapGenerator;
+class CPU;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,6 +21,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+public slots:
+    void loadCode();
 
 private:
     Ui::MainWindow *ui;
@@ -29,5 +32,6 @@ private:
     Relaxation *m_relax;
     RelaxationTor *m_relaxTor;
     MapGenerator *m_mapGen;
+    CPU *m_cpu;
 };
 #endif // MAINWINDOW_H
