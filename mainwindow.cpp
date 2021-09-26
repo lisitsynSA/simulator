@@ -61,6 +61,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionRun_code, SIGNAL(triggered(bool)), m_cpu, SLOT(run()));
     connect(m_cpu, SIGNAL(statusUpd(QString)), ui->cpuEdit, SLOT(setPlainText(QString)));
     connect(m_cpu, SIGNAL(memUpd(QString)), ui->hexEdit, SLOT(setPlainText(QString)));
+    connect(m_cpu, SIGNAL(displayUpd(uint32_t*,uint32_t,uint32_t)),
+            m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
 }
 
 void MainWindow::loadCode() {

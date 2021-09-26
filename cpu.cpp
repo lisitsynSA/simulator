@@ -6,6 +6,7 @@
 CPU::CPU(QObject *parent) : QObject(parent)
 {
     Instr::prepareDict();
+    updateDisplay();
 }
 
 void CPU::readInstrs(QString input_string){
@@ -32,6 +33,7 @@ void CPU::run() {
         m_nextPC = m_PC + 1;
         instr.executeCode(this, m_mem[m_PC]);
         m_PC = m_nextPC;
+        updateDisplay();
     }
     dumpStatus();
     dumpMem();
@@ -48,8 +50,15 @@ void CPU::dumpStatus() {
 void CPU::dumpMem() {
     std::stringstream dump;
     for (uint32_t mem = 0; mem < MEM_SIZE; mem++) {
-        dump << "0x" << std::setfill('0') << std::setw(4) << std::hex << mem
-             << " : " << std::setw(8) << m_mem[mem] << "\n";
+        dump << "0x" << std::setfill('0') << std::setw(4) << std::hex << mem << " : "
+             << std::setw(2) <<  (m_mem[mem] >> 24) << " "
+             << std::setw(2) << ((m_mem[mem] >> 16) & 0xFF) << " "
+             << std::setw(2) << ((m_mem[mem] >> 8) & 0xFF) << " "
+             << std::setw(2) <<  (m_mem[mem] & 0xFF) << "\n";
     }
     emit memUpd(QString::fromStdString(dump.str()));
+}
+
+void CPU::updateDisplay() {
+    emit displayUpd(m_mem + (MEM_SIZE / 2), DIS_WIDTH, DIS_HEIGHT);
 }
