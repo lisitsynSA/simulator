@@ -9,8 +9,22 @@ CPU::CPU(QObject *parent) : QObject(parent)
     updateDisplay();
 }
 
+std::string CPU::processLabels(std::string input_string) {
+    std::stringstream instrs;
+    std::stringstream input;
+    input.str(input_string);
+    Instr instr;
+    uint32_t pc = 0;
+    while (input.rdbuf()->in_avail()) {
+        instr.assembler(input);
+        pc++;
+    }
+    return input_string;
+}
+
 void CPU::readInstrs(QString input_string){
     std::stringstream input;
+    //input.str(processLabels(input_string.toStdString()));
     input.str(input_string.toStdString());
     Instr instr;
     for (uint32_t mem = 0; mem < MEM_SIZE; mem++) {

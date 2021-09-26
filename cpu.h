@@ -14,6 +14,7 @@ class CPU : public QObject
     Q_OBJECT
 public:
     explicit CPU(QObject *parent = nullptr);
+    std::string processLabels(std::string input);
 public slots:
     void readInstrs(QString input);
     void run();
