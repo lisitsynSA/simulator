@@ -18,12 +18,13 @@ void Instr::executeCode(CPU *cpu, uint32_t code) {
 }
 
 void Instr::execute(CPU *cpu) {
-    qDebug() << "[EXEC] " << QString::fromStdString(disasm());
+    // qDebug() << "[EXEC] " << QString::fromStdString(disasm())
+    //         << " args: " << QString::fromStdString(dumpRegs(cpu));
     switch (m_opcode) {
     default:
         qDebug() << "[Error] Wrong opcode";
         break;
-#define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs)\
+#define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs, _dumpregs)\
     case _opcode: { _execute } break;
 #include "ISA.h"
 #undef _ISA
@@ -41,7 +42,7 @@ std::string Instr::assembler(std::stringstream &input) {
         // Return label
         return name;
         break;
-#define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs)\
+#define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs, _dumpregs)\
     case _opcode: { _asmargs } break;
 #include "ISA.h"
 #undef _ISA
@@ -55,8 +56,22 @@ std::string Instr::disasm() {
     default:
         qDebug() << "[Error] Wrong opcode";
         break;
-#define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs)\
+#define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs, _dumpregs)\
     case _opcode: { args << #_name; _disasmargs } break;
+#include "ISA.h"
+#undef _ISA
+    }
+    return args.str();
+}
+
+std::string Instr::dumpRegs(CPU *cpu) {
+    std::stringstream args;
+    switch (m_opcode) {
+    default:
+        qDebug() << "[Error] Wrong opcode";
+        break;
+#define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs, _dumpregs)\
+    case _opcode: { _dumpregs } break;
 #include "ISA.h"
 #undef _ISA
     }
@@ -71,5 +86,5 @@ void Instr::decode(uint32_t code) {
     m_opcode = code >> 24;
     m_r1 = (code >> 20) & 0xF;
     m_r2 = (code >> 16) & 0xF;
-    m_r3_imm = code & 0xFF;
+    m_r3_imm = code & 0xFFFF;
 }
