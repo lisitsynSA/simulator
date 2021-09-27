@@ -23,7 +23,7 @@ public:
     void clear();
     void executeCode(CPU *cpu, uint32_t code);
     void execute(CPU *cpu);
-    void assembler(std::stringstream &input);
+    std::string assembler(std::stringstream &input);
     std::string disasm();
     uint32_t code();
     void decode(uint32_t code);

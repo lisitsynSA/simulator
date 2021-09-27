@@ -41,8 +41,10 @@
     input >> arg; m_r3_imm = stoi(arg.substr(1));}
 #define WRITE_3REGS {args << " r" << m_r1 << " r" << m_r2 << " r" << m_r3_imm;}
 
+// EXIT run = 0
 _ISA(0x01, EXIT, {cpu->m_run = 0;}, {}, {})
 
+// B imm -> nextPC
 _ISA(0x02, B,\
      {cpu->m_nextPC = m_r3_imm;},\
      {READ_IMM},\
@@ -54,13 +56,13 @@ _ISA(0x10, MOV,\
     {READ_2REGS},\
     {WRITE_2REGS})
 
-// MOV rd <- imm_low
+// MOV rd_low <- imm
 _ISA(0x11, MOVli,\
     {cpu->m_regFile[m_r1] = (cpu->m_regFile[m_r1] & 0xFF00) + m_r3_imm;},\
     {READ_REG_IMM},\
     {WRITE_REG_IMM})
 
-// MOV rd <- imm_high
+// MOV rd_high <- imm
 _ISA(0x12, MOVhi,\
     {cpu->m_regFile[m_r1] = (cpu->m_regFile[m_r1] & 0xFF) + (m_r3_imm << 16);},\
     {READ_REG_IMM},\

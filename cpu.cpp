@@ -10,27 +10,57 @@ CPU::CPU(QObject *parent) : QObject(parent)
 }
 
 std::string CPU::processLabels(std::string input_string) {
-    std::stringstream instrs;
     std::stringstream input;
     input.str(input_string);
+    std::map<std::string, uint32_t> label_map;
     Instr instr;
     uint32_t pc = 0;
     while (input.rdbuf()->in_avail()) {
-        instr.assembler(input);
-        pc++;
+        std::string label;
+        try {
+            label = instr.assembler(input);
+            if (label.empty()) {
+                pc++;
+            } else {
+                label_map[label] = pc;
+                qDebug() << "[LABEL] "
+                         << QString::fromStdString(label) << " (" << pc << ")";
+            }
+        } catch (std::invalid_argument excp) {
+            pc++;
+        }
+    }
+    for (auto &labelRec : label_map) {
+        std::string label = labelRec.first;
+        std::string targetPC = std::to_string(labelRec.second);
+        input_string.erase(input_string.find(label), label.size() + 1);
+        label.pop_back();
+        std::size_t found = input_string.find(label);
+        while (found != std::string::npos) {
+            input_string.replace(found, label.size(), targetPC);
+            found = input_string.find(label);
+        }
     }
     return input_string;
 }
 
 void CPU::readInstrs(QString input_string){
     std::stringstream input;
-    //input.str(processLabels(input_string.toStdString()));
-    input.str(input_string.toStdString());
+    input.str(processLabels(input_string.toStdString()));
     Instr instr;
     for (uint32_t mem = 0; mem < MEM_SIZE; mem++) {
         if (input.rdbuf()->in_avail()) {
-            instr.assembler(input);
-            m_mem[mem] = instr.code();
+            std::string label;
+            try {
+                label = instr.assembler(input);
+                if (!label.empty()) {
+                    qDebug() << "[ERROR] instr " << mem << " : "
+                             << QString::fromStdString(label) << "\n";
+                }
+                m_mem[mem] = instr.code();
+            } catch (std::invalid_argument excp) {
+                qDebug() << "[ERROR] invalig args";
+            }
         } else {
             m_mem[mem] = 0;
         }

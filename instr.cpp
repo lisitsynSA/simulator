@@ -30,7 +30,7 @@ void Instr::execute(CPU *cpu) {
     }
 }
 
-void Instr::assembler(std::stringstream &input) {
+std::string Instr::assembler(std::stringstream &input) {
     clear();
     std::string name;
     input >> name;
@@ -38,14 +38,15 @@ void Instr::assembler(std::stringstream &input) {
     std::string arg;
     switch (m_opcode) {
     default:
-        // Add labels
-        qDebug() << "[Error] Wrong opcode";
+        // Return label
+        return name;
         break;
 #define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs)\
     case _opcode: { _asmargs } break;
 #include "ISA.h"
 #undef _ISA
     }
+    return std::string();
 }
 
 std::string Instr::disasm() {
