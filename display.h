@@ -27,6 +27,7 @@ public:
 public slots:
     void clean();
     void loadARGB32(uint32_t *data, uint32_t width, uint32_t height);
+    void loadARGB32Scaled(uint32_t *data, uint32_t width, uint32_t height, uint32_t scale);
 
 signals:
     void leftClick(uint32_t x, uint32_t y);

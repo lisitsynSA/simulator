@@ -13,6 +13,8 @@
 
 // 0x8_ Memory : LD, ST, LDi, STi
 
+// 0x9_ Special : FLUSH, RAND
+
 // ISA format:
 // Opcode
 // Name
@@ -23,6 +25,9 @@
 
 #define READ_IMM {input >> arg; m_r3_imm = stoi(arg);}
 #define WRITE_IMM {args << " " << m_r3_imm;}
+
+#define READ_REG {input >> arg; m_r1 = stoi(arg.substr(1));}
+#define WRITE_REG {args << " r" << m_r1;}
 
 #define READ_REG_IMM {input >> arg; m_r1 = stoi(arg.substr(1));\
     input >> arg; m_r3_imm = stoi(arg);}
@@ -191,9 +196,17 @@ _ISA(0x82, LDi,\
     {WRITE_2REGS_IMM},\
     {DUMP_2REGS_23})
 
-// STi 0x83
+// STi  m_mem[rs + imm] <- rs1
 _ISA(0x83, STi,\
     {cpu->m_mem[cpu->m_regFile[m_r2] + m_r3_imm] = cpu->m_regFile[m_r1];},\
     {READ_2REGS_IMM},\
     {WRITE_2REGS_IMM},\
     {DUMP_3REGS})
+
+// FLUSH
+_ISA(0x90, FLUSH, {cpu->updateDisplay(); QThread::usleep(2);}, {}, {}, {})
+
+// RAND rd <- random
+_ISA(0x91, RAND, {cpu->m_regFile[m_r1] = qrand();},\
+     {READ_REG},\
+     {WRITE_REG}, {})

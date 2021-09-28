@@ -7,6 +7,11 @@ CPU::CPU(QObject *parent) : QObject(parent)
 {
     Instr::prepareDict();
     updateDisplay();
+    execThread = new CPUExecThreads(this);
+}
+
+CPU::~CPU() {
+    delete execThread;
 }
 
 std::string CPU::processLabels(std::string input_string) {
@@ -45,6 +50,9 @@ std::string CPU::processLabels(std::string input_string) {
 }
 
 void CPU::readInstrs(QString input_string){
+    if (m_run) {
+        return;
+    }
     std::stringstream input;
     input.str(processLabels(input_string.toStdString()));
     Instr instr;
@@ -70,21 +78,37 @@ void CPU::readInstrs(QString input_string){
 }
 
 void CPU::run() {
-    m_PC = 0;
-    m_run = true;
-    Instr instr;
-    while (m_run) {
-        m_nextPC = m_PC + 1;
-        instr.executeCode(this, m_mem[m_PC]);
-        m_PC = m_nextPC;
-        updateDisplay();
+    if (m_run) {
+        return;
     }
+    m_run = true;
+    execThread->start();
+}
+
+void CPU::pause() {
+    m_run = false;
+}
+
+void CPU::stop() {
+    m_run = false;
+    m_PC = 0;
     dumpStatus();
-    dumpMem();
+}
+
+void CPUExecThreads::run() {
+    Instr instr;
+    while (cpu->m_run) {
+        cpu->m_nextPC = cpu->m_PC + 1;
+        instr.executeCode(cpu, cpu->m_mem[cpu->m_PC]);
+        cpu->m_PC = cpu->m_nextPC;
+    }
+    cpu->dumpStatus();
+    cpu->dumpMem();
 }
 
 void CPU::dumpStatus() {
     std::stringstream dump;
+    dump << "PC : " << m_PC << "\n\n";
     for (uint32_t i = 0; i < REG_SIZE; i++) {
         dump << "r" << i << " : " << m_regFile[i] << "\n";
     }
@@ -104,5 +128,5 @@ void CPU::dumpMem() {
 }
 
 void CPU::updateDisplay() {
-    emit displayUpd(m_mem + (MEM_SIZE / 2), DIS_WIDTH, DIS_HEIGHT);
+    emit displayUpd(m_mem + (MEM_SIZE / 2), DIS_WIDTH, DIS_HEIGHT, DIS_SCALE);
 }

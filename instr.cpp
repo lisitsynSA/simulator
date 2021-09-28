@@ -23,6 +23,7 @@ void Instr::execute(CPU *cpu) {
     switch (m_opcode) {
     default:
         qDebug() << "[Error] Wrong opcode";
+        cpu->m_run = false;
         break;
 #define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs, _dumpregs)\
     case _opcode: { _execute } break;

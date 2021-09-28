@@ -33,3 +33,8 @@ void Display::clean() {
 void Display::loadARGB32(uint32_t *data, uint32_t width, uint32_t height) {
     m_item->setPixmap(QPixmap::fromImage(QImage((uchar*) data, width, height, QImage::Format_ARGB32)));
 }
+
+void Display::loadARGB32Scaled(uint32_t *data, uint32_t width, uint32_t height, uint32_t scale) {
+    m_item->setPixmap(QPixmap::fromImage(QImage((uchar*) data, width, height, QImage::Format_ARGB32)\
+                                         .scaled(width * scale, height * scale)));
+}

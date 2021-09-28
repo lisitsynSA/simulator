@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "display.h"
-#include "memory.h"
 #include "life.h"
 #include "relaxation.h"
 #include "relaxationtor.h"
@@ -17,9 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     qsrand(QDateTime::currentDateTimeUtc().toTime_t());
     setCentralWidget(ui->gridLayoutWidget);
     m_display = new Display(this);
+    m_display->setMinimumSize((DIS_WIDTH + 1) * DIS_SCALE,\
+                              (DIS_HEIGHT + 1) * DIS_SCALE);
     ui->displayLayout->layout()->addWidget(m_display);
-    //m_mem = new Memory(this);
-    //ui->gridLayoutWidget->layout()->addWidget(m_mem);
 
     // Game of Life
     m_life = new Life(800, 800, this);
@@ -58,11 +57,15 @@ MainWindow::MainWindow(QWidget *parent)
     // CPU
     m_cpu = new CPU(this);
     connect(ui->actionLoad_code, SIGNAL(triggered(bool)), this, SLOT(loadCode()));
-    connect(ui->actionRun_code, SIGNAL(triggered(bool)), m_cpu, SLOT(run()));
+    connect(ui->actionRun_CPU, SIGNAL(triggered(bool)), m_cpu, SLOT(run()));
+    connect(ui->actionPause_CPU, SIGNAL(triggered(bool)), m_cpu, SLOT(pause()));
+    connect(ui->actionStop_CPU, SIGNAL(triggered(bool)), m_cpu, SLOT(stop()));
     connect(m_cpu, SIGNAL(statusUpd(QString)), ui->cpuEdit, SLOT(setPlainText(QString)));
     connect(m_cpu, SIGNAL(memUpd(QString)), ui->hexEdit, SLOT(setPlainText(QString)));
-    connect(m_cpu, SIGNAL(displayUpd(uint32_t*,uint32_t,uint32_t)),
-            m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
+    connect(m_cpu, SIGNAL(displayUpd(uint32_t*,uint32_t,uint32_t,uint32_t)),
+            m_display, SLOT(loadARGB32Scaled(uint32_t*,uint32_t,uint32_t,uint32_t)));
+    m_cpu->dumpStatus();
+    m_cpu->dumpMem();
 }
 
 void MainWindow::loadCode() {
