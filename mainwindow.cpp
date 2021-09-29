@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    m_statusLabel.setAlignment(Qt::AlignHCenter);
+    statusBar()->addWidget(&m_statusLabel);
     qsrand(QDateTime::currentDateTimeUtc().toTime_t());
     setCentralWidget(ui->gridLayoutWidget);
     m_display = new Display(this);
@@ -89,8 +91,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_cpu, SIGNAL(memUpd(QString)), ui->hexEdit, SLOT(setPlainText(QString)));
     connect(m_cpu, SIGNAL(displayUpd(uint32_t*,uint32_t,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32Scaled(uint32_t*,uint32_t,uint32_t,uint32_t)));
+    connect(m_cpu, SIGNAL(sendMsg(QString)),this, SLOT(showMsg(QString)));
     m_cpu->dumpStatus();
     m_cpu->dumpMem();
+    m_cpu->showMsg("CPU is ready");
+}
+
+void MainWindow::showMsg(const QString &msg)
+{
+    m_statusLabel.setText(msg);
 }
 
 void MainWindow::loadCode() {

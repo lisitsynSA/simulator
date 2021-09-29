@@ -1,7 +1,6 @@
 #include "instr.h"
 #include "cpu.h"
 #include <sstream>
-#include <QDebug>
 
 std::map<std::string, uint32_t> Instr::m_instrsDict;
 
@@ -18,12 +17,10 @@ void Instr::executeCode(CPU *cpu, uint32_t code) {
 }
 
 void Instr::execute(CPU *cpu) {
-    // qDebug() << "[EXEC] " << QString::fromStdString(disasm())
-    //         << " args: " << QString::fromStdString(dumpRegs(cpu));
     switch (m_opcode) {
     default:
-        qDebug() << "[Error] Wrong opcode";
-        cpu->m_run = false;
+        cpu->stop();
+        cpu->showMsg("[Error] Wrong opcode on execution");
         break;
 #define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs, _dumpregs)\
     case _opcode: { _execute } break;
@@ -55,7 +52,7 @@ std::string Instr::disasm() {
     std::stringstream args;
     switch (m_opcode) {
     default:
-        qDebug() << "[Error] Wrong opcode";
+        args << "[Opcode Error]";
         break;
 #define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs, _dumpregs)\
     case _opcode: { args << #_name; _disasmargs } break;
@@ -69,7 +66,7 @@ std::string Instr::dumpRegs(CPU *cpu) {
     std::stringstream args;
     switch (m_opcode) {
     default:
-        qDebug() << "[Error] Wrong opcode";
+        args << "[Opcode Error]";
         break;
 #define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs, _dumpregs)\
     case _opcode: { _dumpregs } break;

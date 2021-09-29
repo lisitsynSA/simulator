@@ -29,7 +29,7 @@ class CPU : public QObject
 public:
     explicit CPU(QObject *parent = nullptr);
     ~CPU();
-    std::string processLabels(std::string input);
+    std::string processLabels(std::string input, std::stringstream &labels);
 public slots:
     void readInstrs(QString input);
     void run();
@@ -39,9 +39,11 @@ public slots:
     void dumpStatus();
     void dumpMem();
     void updateDisplay();
+    void showMsg(QString msg);
 signals:
     void statusUpd(QString status);
-    void memUpd(QString status);
+    void memUpd(QString mem);
+    void sendMsg(QString msg);
     void displayUpd(uint32_t *mem, uint32_t width, uint32_t height, uint32_t scale);
 public:
     int32_t m_regFile[REG_SIZE] = {};

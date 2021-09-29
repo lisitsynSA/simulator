@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QLabel>
 class Display;
 class Memory;
 class Life;
@@ -23,6 +24,7 @@ public:
     ~MainWindow();
 public slots:
     void loadCode();
+    void showMsg(const QString &msg);
 
 private:
     Ui::MainWindow *ui;
@@ -33,5 +35,6 @@ private:
     RelaxationTor *m_relaxTor;
     MapGenerator *m_mapGen;
     CPU *m_cpu;
+    QLabel m_statusLabel;
 };
 #endif // MAINWINDOW_H
