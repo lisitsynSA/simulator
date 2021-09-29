@@ -8,6 +8,7 @@
 #include "cpu.h"
 #include <QDateTime>
 #include <QToolBar>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     m_statusLabel.setAlignment(Qt::AlignHCenter);
     statusBar()->addWidget(&m_statusLabel);
+    setWindowTitle("CPU Emulator");
     qsrand(QDateTime::currentDateTimeUtc().toTime_t());
     setCentralWidget(ui->gridLayoutWidget);
     m_display = new Display(this);
@@ -103,6 +105,13 @@ MainWindow::MainWindow(QWidget *parent)
     toolBar->addAction(ui->actionPause_CPU);
     toolBar->addAction(ui->actionStop_CPU);
     toolBar->addAction(ui->actionStep);
+
+    ui->ISABrowser->setText(tr("<h2>CPU Emulator ISA v0.1</h2>"
+#define _ISA(_opcode, _name, _execute, _asmargs, _disasmargs, _dumpregs)\
+                               "<p><h3> " #_opcode " " #_name "</h3><p>" #_execute " "
+#include "ISA.h"
+#undef _ISA
+                               "<p>Lisitsyn Sergey (s.a.lisitsyn@gmail.com) 2021"));
 }
 
 void MainWindow::showMsg(const QString &msg)
@@ -118,4 +127,3 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
