@@ -53,7 +53,7 @@ void Locus::relaxTor() {
 }
 
 void Locus::addNeighbor(Locus* locus) {
-    if (locus == this) {
+    if (locus == this || locus == nullptr) {
         return;
     }
     for (Locus* neighbor: m_neighbors) {
