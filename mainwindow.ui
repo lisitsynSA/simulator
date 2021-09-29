@@ -169,17 +169,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuDemo"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
   <action name="actionLocusGen">
    <property name="text">
     <string>LocusGen</string>
@@ -199,25 +188,40 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>Load code</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
   </action>
   <action name="actionRun_CPU">
    <property name="text">
     <string>Run CPU</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="actionStop_CPU">
    <property name="text">
     <string>Stop CPU</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
   </action>
   <action name="actionPause_CPU">
    <property name="text">
     <string>Pause CPU</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
   </action>
   <action name="actionStep">
    <property name="text">
     <string>Step</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionLife">

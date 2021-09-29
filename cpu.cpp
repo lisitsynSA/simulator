@@ -105,7 +105,7 @@ void CPU::run() {
 void CPU::pause() {
     m_run = false;
     Instr instr;
-    instr.decode(m_mem[m_PC]);
+    instr.decode(m_mem[m_nextPC]);
     showMsg(QString::fromStdString("CPU paused at "\
                + instr.disasm() + " [" + instr.dumpRegs(this) + "]"));
 }

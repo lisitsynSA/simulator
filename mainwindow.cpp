@@ -7,6 +7,7 @@
 #include "mapgenerator.h"
 #include "cpu.h"
 #include <QDateTime>
+#include <QToolBar>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -95,6 +96,13 @@ MainWindow::MainWindow(QWidget *parent)
     m_cpu->dumpStatus();
     m_cpu->dumpMem();
     m_cpu->showMsg("CPU is ready");
+
+    QToolBar *toolBar = addToolBar("&Edit");
+    toolBar->addAction(ui->actionLoad_code);
+    toolBar->addAction(ui->actionRun_CPU);
+    toolBar->addAction(ui->actionPause_CPU);
+    toolBar->addAction(ui->actionStop_CPU);
+    toolBar->addAction(ui->actionStep);
 }
 
 void MainWindow::showMsg(const QString &msg)
