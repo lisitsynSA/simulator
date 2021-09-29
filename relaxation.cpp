@@ -19,7 +19,7 @@ void Relaxation::generateLocuses() {
     m_locuses.clear();
     for (uint32_t y = 0; y < m_ySize; y++)
     for (uint32_t x = 0; x < m_xSize; x++) {
-        if (qrand() % 300 == 0) {
+        if (qrand() % 1000 == 0) {
             // locus
             uint32_t color = 0xff000000 + (qrand() & 0xff)
                                         + ((qrand() & 0xff) << 8)

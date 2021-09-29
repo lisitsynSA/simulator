@@ -23,32 +23,54 @@ MainWindow::MainWindow(QWidget *parent)
     ui->displayLayout->layout()->addWidget(m_display);
 
     // Game of Life
-    m_life = new Life(800, 800, this);
-    connect(ui->actionStart_life, SIGNAL(triggered(bool)), m_life, SLOT(startGame()));
-    connect(ui->actionStart_relax, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
-    connect(ui->actionStart_relax_tor, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
+    m_life = new Life(DIS_WIDTH * DIS_SCALE,\
+                      DIS_HEIGHT * DIS_SCALE, this);
+    connect(ui->actionLife, SIGNAL(triggered(bool)), m_life, SLOT(startGame()));
+    connect(ui->actionRelaxation, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
+    connect(ui->actionTorRelaxation, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
+    connect(ui->actionStopDemo, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
+    connect(ui->actionStep, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
+    connect(ui->actionRun_CPU, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
+    connect(ui->actionLocusGen, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
+    connect(ui->actionHeightGen, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
+    connect(ui->actionRiverGen, SIGNAL(triggered(bool)), m_life, SLOT(stopGame()));
     connect(m_life, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
     connect(m_display, SIGNAL(leftClick(uint32_t,uint32_t)), m_life, SLOT(addLife(uint32_t,uint32_t)));
     connect(m_display, SIGNAL(rightClick(uint32_t,uint32_t)), m_life, SLOT(addVirus(uint32_t,uint32_t)));
 
     // Relaxation
-    m_relax = new Relaxation(600, 600, this);
-    connect(ui->actionStart_relax, SIGNAL(triggered(bool)), m_relax, SLOT(startRelaxation()));
-    connect(ui->actionStart_life, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
-    connect(ui->actionStart_relax_tor, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
+    m_relax = new Relaxation(DIS_WIDTH * DIS_SCALE,\
+                             DIS_HEIGHT * DIS_SCALE, this);
+    connect(ui->actionRelaxation, SIGNAL(triggered(bool)), m_relax, SLOT(startRelaxation()));
+    connect(ui->actionLife, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
+    connect(ui->actionTorRelaxation, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
+    connect(ui->actionStopDemo, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
+    connect(ui->actionStep, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
+    connect(ui->actionRun_CPU, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
+    connect(ui->actionLocusGen, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
+    connect(ui->actionHeightGen, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
+    connect(ui->actionRiverGen, SIGNAL(triggered(bool)), m_relax, SLOT(stopRelaxation()));
     connect(m_relax, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
 
     // Tor Relaxation
-    m_relaxTor = new RelaxationTor(600, 600, this);
-    connect(ui->actionStart_relax_tor, SIGNAL(triggered(bool)), m_relaxTor, SLOT(startRelaxation()));
-    connect(ui->actionStart_life, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
-    connect(ui->actionStart_relax, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
+    m_relaxTor = new RelaxationTor(DIS_WIDTH * DIS_SCALE,\
+                                   DIS_HEIGHT * DIS_SCALE, this);
+    connect(ui->actionTorRelaxation, SIGNAL(triggered(bool)), m_relaxTor, SLOT(startRelaxation()));
+    connect(ui->actionLife, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
+    connect(ui->actionRelaxation, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
+    connect(ui->actionStopDemo, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
+    connect(ui->actionStep, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
+    connect(ui->actionRun_CPU, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
+    connect(ui->actionLocusGen, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
+    connect(ui->actionHeightGen, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
+    connect(ui->actionRiverGen, SIGNAL(triggered(bool)), m_relaxTor, SLOT(stopRelaxation()));
     connect(m_relaxTor, SIGNAL(sendSpace(uint32_t*,uint32_t,uint32_t)),
             m_display, SLOT(loadARGB32(uint32_t*,uint32_t,uint32_t)));
     // Map Generation
-    m_mapGen = new MapGenerator(1200, 600, this);
+    m_mapGen = new MapGenerator(DIS_WIDTH * DIS_SCALE,\
+                                DIS_HEIGHT * DIS_SCALE, this);
     connect(ui->actionLocusGen, SIGNAL(triggered(bool)), m_mapGen, SLOT(startRelaxation()));
     connect(ui->actionHeightGen, SIGNAL(triggered(bool)), m_mapGen, SLOT(generateHeight()));
     connect(ui->actionRiverGen, SIGNAL(triggered(bool)), m_mapGen, SLOT(riverGeneration()));

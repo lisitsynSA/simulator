@@ -108,7 +108,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;SUBi r2 r2 1&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ADDi r3 r3 4112&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;FLUSH&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ANDi r5 r2 127&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ANDi r5 r2 255&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B.EQ r5 r4 break&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;B loop&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
@@ -145,9 +145,10 @@ p, li { white-space: pre-wrap; }
      <addaction name="actionHeightGen"/>
      <addaction name="actionRiverGen"/>
     </widget>
-    <addaction name="actionStart_life"/>
-    <addaction name="actionStart_relax"/>
-    <addaction name="actionStart_relax_tor"/>
+    <addaction name="actionLife"/>
+    <addaction name="actionRelaxation"/>
+    <addaction name="actionTorRelaxation"/>
+    <addaction name="actionStopDemo"/>
     <addaction name="menuMapGen"/>
    </widget>
    <widget class="QMenu" name="menuCPU">
@@ -175,36 +176,6 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </attribute>
   </widget>
-  <action name="actionStart_life">
-   <property name="text">
-    <string>Start life</string>
-   </property>
-  </action>
-  <action name="actionStart_relax">
-   <property name="text">
-    <string>Start relax</string>
-   </property>
-  </action>
-  <action name="actionStart_relax_tor">
-   <property name="text">
-    <string>Strart relax tor</string>
-   </property>
-  </action>
-  <action name="actionLocus_gen">
-   <property name="text">
-    <string>Locus gen</string>
-   </property>
-  </action>
-  <action name="actionHeight_gen">
-   <property name="text">
-    <string>Height gen</string>
-   </property>
-  </action>
-  <action name="actionRiver_gen">
-   <property name="text">
-    <string>River gen</string>
-   </property>
-  </action>
   <action name="actionLocusGen">
    <property name="text">
     <string>LocusGen</string>
@@ -243,6 +214,26 @@ p, li { white-space: pre-wrap; }
   <action name="actionStep">
    <property name="text">
     <string>Step</string>
+   </property>
+  </action>
+  <action name="actionLife">
+   <property name="text">
+    <string>Conway's Game of Life</string>
+   </property>
+  </action>
+  <action name="actionRelaxation">
+   <property name="text">
+    <string>Relaxation</string>
+   </property>
+  </action>
+  <action name="actionTorRelaxation">
+   <property name="text">
+    <string>Tor Relaxation</string>
+   </property>
+  </action>
+  <action name="actionStopDemo">
+   <property name="text">
+    <string>Stop Demo</string>
    </property>
   </action>
  </widget>
