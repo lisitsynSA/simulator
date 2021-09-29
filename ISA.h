@@ -13,7 +13,7 @@
 
 // 0x8_ Memory : LD, ST, LDi, STi
 
-// 0x9_ Special : FLUSH, RAND
+// 0x9_ Special : FLUSH, RAND, BKPT
 
 // ISA format:
 // Opcode
@@ -58,7 +58,7 @@
                          << " r" << m_r3_imm << " = " << cpu->m_regFile[m_r3_imm];}
 
 // EXIT run = 0
-_ISA(0x01, EXIT, {cpu->m_run = 0;}, {}, {}, {})
+_ISA(0x01, EXIT, {cpu->stop();}, {}, {}, {})
 
 // B imm -> nextPC
 _ISA(0x02, B,\
@@ -156,7 +156,12 @@ _ISA(0x43, XOR,\
 // SHR 0x45
 // SHRA 0x46
 
-// ANDi 0x51
+// ANDi rd <- rs & imm
+_ISA(0x51, ANDi,\
+    {cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] & m_r3_imm;},\
+    {READ_2REGS_IMM},\
+    {WRITE_2REGS_IMM},\
+    {DUMP_REG_2})
 // ORi 0x52
 // XORi 0x53
 // SHLi 0x54
@@ -210,3 +215,7 @@ _ISA(0x90, FLUSH, {cpu->updateDisplay(); QThread::usleep(2);}, {}, {}, {})
 _ISA(0x91, RAND, {cpu->m_regFile[m_r1] = qrand();},\
      {READ_REG},\
      {WRITE_REG}, {})
+
+// BKPT
+_ISA(0x93, BKPT, {cpu->pause();}, {}, {}, {})
+

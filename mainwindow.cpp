@@ -18,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_display = new Display(this);
     m_display->setMinimumSize((DIS_WIDTH + 1) * DIS_SCALE,\
                               (DIS_HEIGHT + 1) * DIS_SCALE);
+    m_display->setMaximumSize((DIS_WIDTH + 1) * DIS_SCALE,\
+                              (DIS_HEIGHT + 1) * DIS_SCALE);
     ui->displayLayout->layout()->addWidget(m_display);
 
     // Game of Life
@@ -60,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionRun_CPU, SIGNAL(triggered(bool)), m_cpu, SLOT(run()));
     connect(ui->actionPause_CPU, SIGNAL(triggered(bool)), m_cpu, SLOT(pause()));
     connect(ui->actionStop_CPU, SIGNAL(triggered(bool)), m_cpu, SLOT(stop()));
+    connect(ui->actionStep, SIGNAL(triggered(bool)), m_cpu, SLOT(step()));
     connect(m_cpu, SIGNAL(statusUpd(QString)), ui->cpuEdit, SLOT(setPlainText(QString)));
     connect(m_cpu, SIGNAL(memUpd(QString)), ui->hexEdit, SLOT(setPlainText(QString)));
     connect(m_cpu, SIGNAL(displayUpd(uint32_t*,uint32_t,uint32_t,uint32_t)),

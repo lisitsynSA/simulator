@@ -73,8 +73,10 @@ void CPU::readInstrs(QString input_string){
             m_mem[mem] = 0;
         }
     }
+    m_PC = 0;
     dumpStatus();
     dumpMem();
+    updateDisplay();
 }
 
 void CPU::run() {
@@ -93,6 +95,19 @@ void CPU::stop() {
     m_run = false;
     m_PC = 0;
     dumpStatus();
+    dumpMem();
+}
+
+void CPU::step() {
+    if (m_run) {
+        return;
+    }
+    Instr instr;
+    m_nextPC = m_PC + 1;
+    instr.executeCode(this, m_mem[m_PC]);
+    m_PC = m_nextPC;
+    dumpStatus();
+    dumpMem();
 }
 
 void CPUExecThreads::run() {

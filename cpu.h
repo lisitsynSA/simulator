@@ -35,6 +35,7 @@ public slots:
     void run();
     void pause();
     void stop();
+    void step();
     void dumpStatus();
     void dumpMem();
     void updateDisplay();
