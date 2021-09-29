@@ -58,64 +58,81 @@
                          << " r" << m_r3_imm << " = " << cpu->m_regFile[m_r3_imm];}
 
 // EXIT run = 0
-_ISA(0x01, EXIT, {cpu->stop();}, {}, {}, {})
+_ISA(0x01, EXIT,\
+     {cpu->stop();},\
+     {}, {}, {})
 
 // B imm -> nextPC
 _ISA(0x02, B,\
      {cpu->m_nextPC = m_r3_imm;},\
-     {READ_IMM},\
-     {WRITE_IMM}, {})
+     {READ_IMM}, {WRITE_IMM}, {})
 
-// BL 0x03
-// RET 0x04
-// BR 0x05
+// BL PC+1 -> r0; imm -> nextPC
+_ISA(0x03, BL,\
+     {cpu->m_regFile[0] = cpu->m_PC + 1; cpu->m_nextPC = m_r3_imm;},\
+     {READ_IMM}, {WRITE_IMM}, {})
+
+// RET r0 -> nextPC
+_ISA(0x04, RET,\
+     {cpu->m_nextPC = cpu->m_regFile[0];},\
+     {}, {}, {})
+
+// BR rs1 -> nextPC
+_ISA(0x05, BR,\
+     {cpu->m_nextPC = cpu->m_regFile[m_r1];},\
+     {READ_REG}, {WRITE_REG}, {DUMP_REG_1})
+
 
 // B.EQ rs1 == rs2 ? imm -> nextPC
 _ISA(0x06, B.EQ,\
      {if (cpu->m_regFile[m_r1] == cpu->m_regFile[m_r2])\
       {cpu->m_nextPC = m_r3_imm;}},\
-     {READ_2REGS_IMM},\
-     {WRITE_2REGS_IMM},\
-     {DUMP_2REGS_12})
+     {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_12})
 
-// B.NE 0x07
-// B.GT 0x08
-// B.LE 0x09
+// B.NE rs1 != rs2 ? imm -> nextPC
+_ISA(0x07, B.NE,\
+     {if (cpu->m_regFile[m_r1] != cpu->m_regFile[m_r2])\
+      {cpu->m_nextPC = m_r3_imm;}},\
+     {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_12})
+
+// B.GT rs1 > rs2 ? imm -> nextPC
+_ISA(0x08, B.GT,\
+     {if (cpu->m_regFile[m_r1] > cpu->m_regFile[m_r2])\
+      {cpu->m_nextPC = m_r3_imm;}},\
+     {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_12})
+
+// B.LE rs1 <= rs2 ? imm -> nextPC
+_ISA(0x09, B.LE,\
+     {if (cpu->m_regFile[m_r1] <= cpu->m_regFile[m_r2])\
+      {cpu->m_nextPC = m_r3_imm;}},\
+     {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_12})
 
 // MOV rd <- rs
 _ISA(0x10, MOV,\
     {cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2];},\
-    {READ_2REGS},\
-    {WRITE_2REGS},\
-    {DUMP_REG_2})
+    {READ_2REGS}, {WRITE_2REGS}, {DUMP_REG_2})
 
 // MOVli rd_low <- imm
 _ISA(0x11, MOVli,\
     {cpu->m_regFile[m_r1] = (cpu->m_regFile[m_r1] & 0xFFFF0000) + m_r3_imm;},\
-    {READ_REG_IMM},\
-    {WRITE_REG_IMM}, {})
+    {READ_REG_IMM}, {WRITE_REG_IMM}, {})
 
 // MOVhi rd_high <- imm
 _ISA(0x12, MOVhi,\
     {cpu->m_regFile[m_r1] = (cpu->m_regFile[m_r1] & 0xFFFF) + (m_r3_imm << 16);},\
-    {READ_REG_IMM},\
-    {WRITE_REG_IMM}, {})
+    {READ_REG_IMM}, {WRITE_REG_IMM}, {})
 
 // NEG 0x20
 
 // ADD rd <- rs1 + rs2
 _ISA(0x21, ADD,\
     {cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] + cpu->m_regFile[m_r3_imm];},\
-    {READ_3REGS},\
-    {WRITE_3REGS},\
-    {DUMP_2REGS_23})
+    {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // SUB rd <- rs1 - rs2
 _ISA(0x22, SUB,\
     {cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] - cpu->m_regFile[m_r3_imm];},\
-    {READ_3REGS},\
-    {WRITE_3REGS},\
-    {DUMP_2REGS_23})
+    {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // MUL 0x23
 // DIV 0x24
@@ -125,16 +142,12 @@ _ISA(0x22, SUB,\
 // ADDi rd <- rs + imm
 _ISA(0x31, ADDi,\
     {cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] + m_r3_imm;},\
-    {READ_2REGS_IMM},\
-    {WRITE_2REGS_IMM},\
-    {DUMP_REG_2})
+    {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // SUBi rd <- rs - imm
 _ISA(0x32, SUBi,\
     {cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] - m_r3_imm;},\
-    {READ_2REGS_IMM},\
-    {WRITE_2REGS_IMM},\
-    {DUMP_REG_2})
+    {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // MULi 0x33
 // DIVi 0x34
@@ -148,9 +161,7 @@ _ISA(0x32, SUBi,\
 // XOR rd = rs1 ^ rs2
 _ISA(0x43, XOR,\
     {cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] ^ cpu->m_regFile[m_r3_imm];},\
-    {READ_3REGS},\
-    {WRITE_3REGS},\
-    {DUMP_2REGS_23})
+    {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // SHL 0x44
 // SHR 0x45
@@ -159,9 +170,8 @@ _ISA(0x43, XOR,\
 // ANDi rd <- rs & imm
 _ISA(0x51, ANDi,\
     {cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] & m_r3_imm;},\
-    {READ_2REGS_IMM},\
-    {WRITE_2REGS_IMM},\
-    {DUMP_REG_2})
+    {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
+
 // ORi 0x52
 // XORi 0x53
 // SHLi 0x54
@@ -183,39 +193,35 @@ _ISA(0x51, ANDi,\
 // LD rd <- m_mem[rs1 + rs2]
 _ISA(0x80, LD,\
     {cpu->m_regFile[m_r1] = cpu->m_mem[cpu->m_regFile[m_r2] + cpu->m_regFile[m_r3_imm]];},\
-    {READ_3REGS},\
-    {WRITE_3REGS},\
-    {DUMP_2REGS_23})
+    {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // ST m_mem[rs2 + rs3] <- rs1
 _ISA(0x81, ST,\
     {cpu->m_mem[cpu->m_regFile[m_r2] + cpu->m_regFile[m_r3_imm]] = cpu->m_regFile[m_r1];},\
-    {READ_3REGS},\
-    {WRITE_3REGS},\
-    {DUMP_3REGS})
+    {READ_3REGS}, {WRITE_3REGS}, {DUMP_3REGS})
 
 // LDi rd <- m_mem[rs + imm]
 _ISA(0x82, LDi,\
     {cpu->m_regFile[m_r1] = cpu->m_mem[cpu->m_regFile[m_r2] + m_r3_imm];},\
-    {READ_2REGS_IMM},\
-    {WRITE_2REGS_IMM},\
-    {DUMP_2REGS_23})
+    {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_23})
 
 // STi  m_mem[rs + imm] <- rs1
 _ISA(0x83, STi,\
     {cpu->m_mem[cpu->m_regFile[m_r2] + m_r3_imm] = cpu->m_regFile[m_r1];},\
-    {READ_2REGS_IMM},\
-    {WRITE_2REGS_IMM},\
-    {DUMP_3REGS})
+    {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_3REGS})
 
 // FLUSH
-_ISA(0x90, FLUSH, {cpu->updateDisplay(); QThread::usleep(2);}, {}, {}, {})
+_ISA(0x90, FLUSH,\
+     {cpu->updateDisplay(); QThread::usleep(2);},\
+     {}, {}, {})
 
 // RAND rd <- random
-_ISA(0x91, RAND, {cpu->m_regFile[m_r1] = qrand();},\
-     {READ_REG},\
-     {WRITE_REG}, {})
+_ISA(0x91, RAND,\
+     {cpu->m_regFile[m_r1] = qrand();},\
+     {READ_REG}, {WRITE_REG}, {})
 
 // BKPT
-_ISA(0x93, BKPT, {cpu->pause();}, {}, {}, {})
+_ISA(0x93, BKPT,\
+     {cpu->pause();},\
+     {}, {}, {})
 
