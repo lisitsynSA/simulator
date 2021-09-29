@@ -2,6 +2,7 @@
 #define INSTR_H
 
 #include <cstdint>
+#include <cmath>
 #include <string>
 #include <map>
 class CPU;
