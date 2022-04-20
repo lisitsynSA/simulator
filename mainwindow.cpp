@@ -9,6 +9,7 @@
 #include <QDateTime>
 #include <QToolBar>
 #include <QMessageBox>
+#include <QRandomGenerator>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_statusLabel.setAlignment(Qt::AlignHCenter);
     statusBar()->addWidget(&m_statusLabel);
     setWindowTitle("CPU Emulator");
-    qsrand(QDateTime::currentDateTimeUtc().toTime_t());
+    // QRandomGenerator::global()->seed(QDateTime::currentMSecsSinceEpoch());
     setCentralWidget(ui->gridLayoutWidget);
     m_display = new Display(this);
     m_display->setMinimumSize((DIS_WIDTH + 1) * DIS_SCALE,\

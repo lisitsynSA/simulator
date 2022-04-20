@@ -342,7 +342,7 @@ _ISA(0x80, FLUSH,\
 
 // RAND rd <- random
 _ISA(0x81, RAND,\
-     {cpu->m_regFile[m_r1] = qrand();},\
+     {cpu->m_regFile[m_r1] = QRandomGenerator::global()->generate();},\
      {READ_REG}, {WRITE_REG}, {})
 
 // BKPT pause CPU

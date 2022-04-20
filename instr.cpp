@@ -1,6 +1,7 @@
 #include "instr.h"
 #include "cpu.h"
 #include <sstream>
+#include <QRandomGenerator>
 
 std::map<std::string, uint32_t> Instr::m_instrsDict;
 

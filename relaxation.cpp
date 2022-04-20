@@ -2,6 +2,7 @@
 #include "locus.h"
 #include <QTimer>
 #include <QDebug>
+#include <QRandomGenerator>
 
 Relaxation::Relaxation(uint32_t xSize, uint32_t ySize, QObject *parent) :
     QObject(parent), m_xSize(xSize), m_ySize(ySize)
@@ -19,11 +20,12 @@ void Relaxation::generateLocuses() {
     m_locuses.clear();
     for (uint32_t y = 0; y < m_ySize; y++)
     for (uint32_t x = 0; x < m_xSize; x++) {
-        if (qrand() % 1000 == 0) {
+        if (QRandomGenerator::global()->bounded(1000) == 0) {
             // locus
-            uint32_t color = 0xff000000 + (qrand() & 0xff)
-                                        + ((qrand() & 0xff) << 8)
-                                        + ((qrand() & 0xff) << 16);
+            uint32_t color = 0xff000000
+                    + (QRandomGenerator::global()->generate() & 0xff)
+                    + ((QRandomGenerator::global()->generate() & 0xff) << 8)
+                    + ((QRandomGenerator::global()->generate() & 0xff) << 16);
             m_locuses.push_back(Locus(x, y, color, m_xSize, m_ySize));
         }
     }

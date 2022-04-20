@@ -1,5 +1,7 @@
 #include "life.h"
 #include <QTimer>
+#include <QtGlobal>
+#include <QRandomGenerator>
 
 Life::Life(uint32_t xSize, uint32_t ySize, QObject *parent) :
     QObject(parent), m_xSize(xSize), m_ySize(ySize), m_ym(xSize + 2) {
@@ -20,7 +22,7 @@ Life::~Life() {
 void Life::generateSpace() {
     for (uint32_t y = 1; y <= m_ySize; y++)
     for (uint32_t x = 1; x <= m_xSize; x++) {
-        if (qrand() % 2 == 0) {
+        if (QRandomGenerator::global()->bounded(2)) {
             // alive
             m_tmp[y*m_ym + x] = 1;
         } else {
@@ -78,7 +80,8 @@ void Life::calcSpace() {
     for (uint32_t y = 1; y <= m_ySize; y++)
     for (uint32_t x = 1; x <= m_xSize; x++) {
         m_tmpNew[y*m_ym + x] = calcCell(x, y);
-        if (m_virusQueue && m_tmpNew[y*m_ym + x] == 1 && qrand() % (m_ySize*m_xSize) == 0){
+        if (m_virusQueue && m_tmpNew[y*m_ym + x] == 1 &&
+                QRandomGenerator::global()->bounded(m_ySize*m_xSize) == 0){
             m_virusQueue--;
             m_tmpNew[y*m_ym + x] = 3;
         }
