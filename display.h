@@ -1,40 +1,41 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include <QObject>
-#include <QGraphicsView>
 #include <QGraphicsPixmapItem>
+#include <QGraphicsView>
+#include <QObject>
 class QGraphicsScene;
 class Display;
 
-class mousePixmapItem : public QGraphicsPixmapItem
-{
+class mousePixmapItem : public QGraphicsPixmapItem {
 public:
-    mousePixmapItem(Display *display, QGraphicsItem *parent = nullptr):
-        QGraphicsPixmapItem(parent), m_displ(display)
-    {}
+  mousePixmapItem(Display *display, QGraphicsItem *parent = nullptr)
+      : QGraphicsPixmapItem(parent), m_displ(display) {}
+
 private:
-    Display *m_displ;
+  Display *m_displ;
+
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+  void mousePressEvent(QGraphicsSceneMouseEvent *event);
 };
 
-class Display : public QGraphicsView
-{
-    Q_OBJECT
+class Display : public QGraphicsView {
+  Q_OBJECT
 public:
-    Display(QWidget *parent = nullptr);
+  Display(QWidget *parent = nullptr);
 public slots:
-    void clean();
-    void loadARGB32(uint32_t *data, uint32_t width, uint32_t height);
-    void loadARGB32Scaled(uint32_t *data, uint32_t width, uint32_t height, uint32_t scale);
+  void clean();
+  void loadARGB32(uint32_t *data, uint32_t width, uint32_t height);
+  void loadARGB32Scaled(uint32_t *data, uint32_t width, uint32_t height,
+                        uint32_t scale);
 
 signals:
-    void leftClick(uint32_t x, uint32_t y);
-    void rightClick(uint32_t x, uint32_t y);
+  void leftClick(uint32_t x, uint32_t y);
+  void rightClick(uint32_t x, uint32_t y);
+
 private:
-    QGraphicsScene* m_scene = nullptr;
-    mousePixmapItem* m_item = nullptr;
+  QGraphicsScene *m_scene = nullptr;
+  mousePixmapItem *m_item = nullptr;
 };
 
 #endif // DISPLAY_H
