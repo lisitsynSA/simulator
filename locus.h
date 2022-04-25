@@ -6,7 +6,8 @@
 class Locus {
 public:
   Locus(uint32_t x, uint32_t y, uint32_t color, uint32_t xSize, uint32_t ySize)
-      : m_x(x), m_y(y), m_color(color), m_xSize(xSize), m_ySize(ySize) {}
+      : m_x(x), m_y(y), m_z(0), m_color(color), m_xSize(xSize), m_ySize(ySize) {
+  }
   void drawSpace(uint32_t *space);
   void relax();
   void relaxTor();

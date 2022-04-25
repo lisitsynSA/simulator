@@ -107,28 +107,25 @@
 /// 0x0_ Control flow instructions
 ///
 // EXIT stop CPU
-_ISA(0x01, EXIT, { cpu->stop(); }, {}, {}, {})
+_ISA(0x01, exit, { cpu->stop(); }, {}, {}, {})
 
 // B imm -> nextPC
-_ISA(0x02, B, { cpu->m_nextPC = m_r3_imm; }, {READ_IMM}, {WRITE_IMM}, {})
+_ISA(0x02, b, { cpu->m_nextPC = m_r3_imm; }, {READ_IMM}, {WRITE_IMM}, {})
 
-// BL r0 = PC+1; imm -> nextPC
-_ISA(0x03, BL,
+// BL rs1 = PC+1; imm -> nextPC
+_ISA(0x03, bl,
      {
-       cpu->m_regFile[0] = cpu->m_PC + 1;
+       cpu->m_regFile[m_r1] = cpu->m_PC + 1;
        cpu->m_nextPC = m_r3_imm;
      },
-     {READ_IMM}, {WRITE_IMM}, {})
-
-// RET r0 -> nextPC
-_ISA(0x04, RET, { cpu->m_nextPC = cpu->m_regFile[0]; }, {}, {}, {})
+     {READ_REG_IMM}, {WRITE_REG_IMM}, {})
 
 // BR rs1 -> nextPC
-_ISA(0x05, BR, { cpu->m_nextPC = cpu->m_regFile[m_r1]; }, {READ_REG},
+_ISA(0x04, br, { cpu->m_nextPC = cpu->m_regFile[m_r1]; }, {READ_REG},
      {WRITE_REG}, {DUMP_REG_1})
 
 // B.EQ rs1 == rs2 ? imm -> nextPC
-_ISA(0x06, B.EQ,
+_ISA(0x05, beq,
      {
        if (cpu->m_regFile[m_r1] == cpu->m_regFile[m_r2]) {
          cpu->m_nextPC = m_r3_imm;
@@ -137,7 +134,7 @@ _ISA(0x06, B.EQ,
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_12})
 
 // B.NE rs1 != rs2 ? imm -> nextPC
-_ISA(0x07, B.NE,
+_ISA(0x06, bne,
      {
        if (cpu->m_regFile[m_r1] != cpu->m_regFile[m_r2]) {
          cpu->m_nextPC = m_r3_imm;
@@ -146,7 +143,25 @@ _ISA(0x07, B.NE,
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_12})
 
 // B.GT rs1 > rs2 ? imm -> nextPC
-_ISA(0x08, B.GT,
+_ISA(0x07, bgt,
+     {
+       if ((int32_t)cpu->m_regFile[m_r1] > (int32_t)cpu->m_regFile[m_r2]) {
+         cpu->m_nextPC = m_r3_imm;
+       }
+     },
+     {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_12})
+
+// B.LE rs1 <= rs2 ? imm -> nextPC
+_ISA(0x08, ble,
+     {
+       if ((int32_t)cpu->m_regFile[m_r1] <= (int32_t)cpu->m_regFile[m_r2]) {
+         cpu->m_nextPC = m_r3_imm;
+       }
+     },
+     {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_12})
+
+// B.GTU (unsigned) rs1 > (unsigned) rs2 ? imm -> nextPC
+_ISA(0x09, bgtu,
      {
        if (cpu->m_regFile[m_r1] > cpu->m_regFile[m_r2]) {
          cpu->m_nextPC = m_r3_imm;
@@ -154,8 +169,8 @@ _ISA(0x08, B.GT,
      },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_12})
 
-// B.LE rs1 <= rs2 ? imm -> nextPC
-_ISA(0x09, B.LE,
+// B.LEU (unsigned) rs1 <= (unsigned) rs2 ? imm -> nextPC
+_ISA(0x10, bleu,
      {
        if (cpu->m_regFile[m_r1] <= cpu->m_regFile[m_r2]) {
          cpu->m_nextPC = m_r3_imm;
@@ -167,66 +182,61 @@ _ISA(0x09, B.LE,
 /// 0x1_ Move instructions
 ///
 // MOV rd = rs
-_ISA(0x10, MOV, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2]; }, {READ_2REGS},
+_ISA(0x11, mov, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2]; }, {READ_2REGS},
      {WRITE_2REGS}, {DUMP_REG_2})
 
 // MOVli rd_low = imm
-_ISA(0x11, MOVli,
-     { cpu->m_regFile[m_r1] = (cpu->m_regFile[m_r1] & 0xFFFF0000) + m_r3_imm; },
-     {READ_REG_IMM}, {WRITE_REG_IMM}, {})
+_ISA(0x12, movli, { cpu->m_regFile[m_r1] = m_r3_imm; }, {READ_REG_IMM},
+     {WRITE_REG_IMM}, {})
 
 // MOVhi rd_high = imm
-_ISA(0x12, MOVhi,
-     {
-       cpu->m_regFile[m_r1] =
-           (cpu->m_regFile[m_r1] & 0xFFFF) + (m_r3_imm << 16);
-     },
-     {READ_REG_IMM}, {WRITE_REG_IMM}, {})
+_ISA(0x13, movhi, { cpu->m_regFile[m_r1] = m_r3_imm << 16; }, {READ_REG_IMM},
+     {WRITE_REG_IMM}, {})
 
 ///
 /// 0x2_ Arithmetic instructions
 ///
 // NEG rd = -rs
-_ISA(0x20, NEG, { cpu->m_regFile[m_r1] = -cpu->m_regFile[m_r2]; }, {READ_2REGS},
+_ISA(0x20, neg, { cpu->m_regFile[m_r1] = -cpu->m_regFile[m_r2]; }, {READ_2REGS},
      {WRITE_2REGS}, {DUMP_2REGS_12})
 
 // ADD rd = rs1 + rs2
-_ISA(0x21, ADD,
+_ISA(0x21, add,
      {
        cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] + cpu->m_regFile[m_r3_imm];
      },
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // SUB rd = rs1 - rs2
-_ISA(0x22, SUB,
+_ISA(0x22, sub,
      {
        cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] - cpu->m_regFile[m_r3_imm];
      },
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // MUL rd = rs1 * rs2
-_ISA(0x23, MUL,
+_ISA(0x23, mul,
      {
        cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] * cpu->m_regFile[m_r3_imm];
      },
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // DIV rd = rs1 / rs2
-_ISA(0x24, DIV,
+_ISA(0x24, div,
      {
        cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] / cpu->m_regFile[m_r3_imm];
      },
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // DIV_REM rd = rs1 % rs2
-_ISA(0x25, DIV_REM,
+_ISA(0x25, divrem,
      {
        cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] % cpu->m_regFile[m_r3_imm];
      },
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // POW rd = pow(rs1, rs2)
-_ISA(0x26, POW,
+_ISA(0x26, pow,
      {
        cpu->m_regFile[m_r1] =
            pow(cpu->m_regFile[m_r2], cpu->m_regFile[m_r3_imm]);
@@ -237,73 +247,77 @@ _ISA(0x26, POW,
 /// 0x3_ Arithmetic w/ imm instructions
 ///
 // ADDi rd = rs + imm
-_ISA(0x31, ADDi, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] + m_r3_imm; },
+_ISA(0x31, addi,
+     { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] + (int16_t)m_r3_imm; },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // SUBi rd = rs - imm
-_ISA(0x32, SUBi, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] - m_r3_imm; },
+_ISA(0x32, subi,
+     { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] - (int16_t)m_r3_imm; },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // MULi rd = rs * imm
-_ISA(0x33, MULi, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] * m_r3_imm; },
+_ISA(0x33, muli,
+     { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] * (int16_t)m_r3_imm; },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // DIVi rd = rs / imm
-_ISA(0x34, DIVi, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] / m_r3_imm; },
+_ISA(0x34, divi,
+     { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] / (int16_t)m_r3_imm; },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // DIV_REMi rd = rs % imm
-_ISA(0x35, DIV_REMi,
-     { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] % m_r3_imm; },
+_ISA(0x35, divremi,
+     { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] % (int16_t)m_r3_imm; },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // POWi  rd = pow(rs, imm)
-_ISA(0x36, POWi,
-     { cpu->m_regFile[m_r1] = pow(cpu->m_regFile[m_r2], m_r3_imm); },
+_ISA(0x36, powi,
+     { cpu->m_regFile[m_r1] = pow(cpu->m_regFile[m_r2], (int16_t)m_r3_imm); },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // POWi_  rd = pow(imm, rs)
-_ISA(0x37, POWi_,
-     { cpu->m_regFile[m_r1] = pow(m_r3_imm, cpu->m_regFile[m_r2]); },
+_ISA(0x37, powi_,
+     { cpu->m_regFile[m_r1] = pow((int16_t)m_r3_imm, cpu->m_regFile[m_r2]); },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 ///
 /// 0x4_ Bitwise instructions
 ///
 // NOT rd = ~rs1
-_ISA(0x40, NOT, { cpu->m_regFile[m_r1] = ~cpu->m_regFile[m_r2]; }, {READ_2REGS},
+_ISA(0x40, not, { cpu->m_regFile[m_r1] = ~cpu->m_regFile[m_r2]; }, {READ_2REGS},
      {WRITE_2REGS}, {DUMP_2REGS_12})
 
 // AND rd = rs1 & rs2
-_ISA(0x41, AND,
+_ISA(0x41, and,
      {
        cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] & cpu->m_regFile[m_r3_imm];
      },
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // OR rd = rs1 | rs2
-_ISA(0x42, OR,
+_ISA(0x42, or,
      {
        cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] | cpu->m_regFile[m_r3_imm];
      },
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // XOR rd = rs1 ^ rs2
-_ISA(0x43, XOR,
+_ISA(0x43, xor,
      {
        cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] ^ cpu->m_regFile[m_r3_imm];
      },
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // SHL rd = rs1 << rs2
-_ISA(0x44, SHL,
+_ISA(0x44, shl,
      {
        cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] << cpu->m_regFile[m_r3_imm];
      },
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // SHR rd = (unsigned) rs1 >> rs2
-_ISA(0x45, SHR,
+_ISA(0x45, shr,
      {
        cpu->m_regFile[m_r1] =
            (uint32_t)cpu->m_regFile[m_r2] >> cpu->m_regFile[m_r3_imm];
@@ -311,7 +325,7 @@ _ISA(0x45, SHR,
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // SHRA  rd = rs1 >> rs2
-_ISA(0x46, SHRA,
+_ISA(0x46, shra,
      {
        cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] >> cpu->m_regFile[m_r3_imm];
      },
@@ -321,28 +335,31 @@ _ISA(0x46, SHRA,
 /// 0x5_ Bitwise w/ imm instructions
 ///
 // ANDi rd = rs & imm
-_ISA(0x51, ANDi, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] & m_r3_imm; },
+_ISA(0x51, andi,
+     { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] & (int16_t)m_r3_imm; },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // ORi rd = rs | imm
-_ISA(0x52, ORi, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] | m_r3_imm; },
+_ISA(0x52, ori,
+     { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] | (int16_t)m_r3_imm; },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // XORi rd = rs ^ imm
-_ISA(0x53, XORi, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] ^ m_r3_imm; },
+_ISA(0x53, xori,
+     { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] ^ (int16_t)m_r3_imm; },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // SHLi rd = rs << imm
-_ISA(0x54, SHLi, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] << m_r3_imm; },
+_ISA(0x54, shli, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] << m_r3_imm; },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // SHRi rd = (unsigned) rs >> imm
-_ISA(0x55, SHRi,
+_ISA(0x55, shri,
      { cpu->m_regFile[m_r1] = (uint32_t)cpu->m_regFile[m_r2] >> m_r3_imm; },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // SHRAi rd = rs >> imm
-_ISA(0x56, SHRAi, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] >> m_r3_imm; },
+_ISA(0x56, shrai, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] >> m_r3_imm; },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 ///
@@ -354,7 +371,7 @@ _ISA(0x56, SHRAi, { cpu->m_regFile[m_r1] = cpu->m_regFile[m_r2] >> m_r3_imm; },
 // DIVf 0x64
 // POWf 0x65
 // ADDf rdf = rs1f + rs2f
-_ISA(0x61, ADDf,
+_ISA(0x61, addf,
      {
        cpu->m_regFile[m_r1] = (int32_t)((float)cpu->m_regFile[m_r2] +
                                         (float)cpu->m_regFile[m_r3_imm]);
@@ -362,7 +379,7 @@ _ISA(0x61, ADDf,
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // SUBf rdf = rs1f - rs2f
-_ISA(0x62, SUBf,
+_ISA(0x62, subf,
      {
        cpu->m_regFile[m_r1] = (int32_t)((float)cpu->m_regFile[m_r2] -
                                         (float)cpu->m_regFile[m_r3_imm]);
@@ -370,7 +387,7 @@ _ISA(0x62, SUBf,
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // MULf rdf = rs1f * rs2f
-_ISA(0x63, MULf,
+_ISA(0x63, mulf,
      {
        cpu->m_regFile[m_r1] = (int32_t)((float)cpu->m_regFile[m_r2] *
                                         (float)cpu->m_regFile[m_r3_imm]);
@@ -378,7 +395,7 @@ _ISA(0x63, MULf,
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // DIVf rdf = rs1f / rs2f
-_ISA(0x64, DIVf,
+_ISA(0x64, divf,
      {
        cpu->m_regFile[m_r1] = (int32_t)((float)cpu->m_regFile[m_r2] /
                                         (float)cpu->m_regFile[m_r3_imm]);
@@ -386,7 +403,7 @@ _ISA(0x64, DIVf,
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // POW rdf = pow(rs1f, rs2f)
-_ISA(0x65, POWf,
+_ISA(0x65, powf,
      {
        cpu->m_regFile[m_r1] = (int32_t)(pow((float)cpu->m_regFile[m_r2],
                                             (float)cpu->m_regFile[m_r3_imm]));
@@ -397,7 +414,7 @@ _ISA(0x65, POWf,
 /// 0x7_ Memory instructions
 ///
 // LD rd = m_mem[rs1 + rs2]
-_ISA(0x70, LD,
+_ISA(0x70, ld,
      {
        cpu->m_regFile[m_r1] =
            cpu->m_mem[cpu->m_regFile[m_r2] + cpu->m_regFile[m_r3_imm]];
@@ -405,7 +422,7 @@ _ISA(0x70, LD,
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // ST m_mem[rs2 + rs3] = rs1
-_ISA(0x71, ST,
+_ISA(0x71, st,
      {
        cpu->m_mem[cpu->m_regFile[m_r2] + cpu->m_regFile[m_r3_imm]] =
            cpu->m_regFile[m_r1];
@@ -413,20 +430,26 @@ _ISA(0x71, ST,
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_3REGS})
 
 // LDi rd = m_mem[rs + imm]
-_ISA(0x72, LDi,
-     { cpu->m_regFile[m_r1] = cpu->m_mem[cpu->m_regFile[m_r2] + m_r3_imm]; },
-     {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_23})
+_ISA(0x72, ldi,
+     {
+       cpu->m_regFile[m_r1] =
+           cpu->m_mem[cpu->m_regFile[m_r2] + (int16_t)m_r3_imm];
+     },
+     {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // STi  m_mem[rs + imm] = rs1
-_ISA(0x73, STi,
-     { cpu->m_mem[cpu->m_regFile[m_r2] + m_r3_imm] = cpu->m_regFile[m_r1]; },
-     {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_3REGS})
+_ISA(0x73, sti,
+     {
+       cpu->m_mem[cpu->m_regFile[m_r2] + (int16_t)m_r3_imm] =
+           cpu->m_regFile[m_r1];
+     },
+     {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_12})
 
 ///
 /// 0x8_ Special instructions
 ///
 // FLUSH update display
-_ISA(0x80, FLUSH,
+_ISA(0x80, flush,
      {
        cpu->updateDisplay();
        QThread::usleep(10);
@@ -434,9 +457,9 @@ _ISA(0x80, FLUSH,
      {}, {}, {})
 
 // RAND rd <- random
-_ISA(0x81, RAND,
+_ISA(0x81, rand,
      { cpu->m_regFile[m_r1] = QRandomGenerator::global()->generate(); },
      {READ_REG}, {WRITE_REG}, {})
 
 // BKPT pause CPU
-_ISA(0x82, BKPT, { cpu->pause(); }, {}, {}, {})
+_ISA(0x82, bkpt, { cpu->pause(); }, {}, {}, {})

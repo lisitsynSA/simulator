@@ -87,7 +87,7 @@ std::string Instr::dumpRegs(CPU *cpu) {
 }
 
 uint32_t Instr::code() {
-  return (m_opcode << 24) | (m_r1 << 20) | (m_r2 << 16) | m_r3_imm;
+  return (m_opcode << 24) | (m_r1 << 20) | (m_r2 << 16) | (m_r3_imm & 0xFFFF);
 }
 
 void Instr::decode(uint32_t code) {

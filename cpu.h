@@ -44,7 +44,7 @@ signals:
                   uint32_t scale);
 
 public:
-  int32_t m_regFile[REG_SIZE] = {};
+  uint32_t m_regFile[REG_SIZE] = {};
   uint32_t m_mem[MEM_SIZE] = {};
   uint32_t m_PC;
   uint32_t m_nextPC;
