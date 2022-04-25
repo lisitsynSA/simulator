@@ -412,14 +412,14 @@ _ISA(0x65, POWf,
 _ISA(0x70, LD,
      {
        cpu->m_regFile[m_r1] =
-           cpu->m_mem[cpu->m_regFile[m_r2] + cpu->m_regFile[m_r3_imm]];
+           cpu->readMem(cpu->m_regFile[m_r2] + cpu->m_regFile[m_r3_imm]);
      },
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_2REGS_23})
 
 // ST m_mem[rs2 + rs3] = rs1
 _ISA(0x71, ST,
      {
-       cpu->m_mem[cpu->m_regFile[m_r2] + cpu->m_regFile[m_r3_imm]] =
+       cpu->readMem(cpu->m_regFile[m_r2] + cpu->m_regFile[m_r3_imm]) =
            cpu->m_regFile[m_r1];
      },
      {READ_3REGS}, {WRITE_3REGS}, {DUMP_3REGS})
@@ -428,14 +428,14 @@ _ISA(0x71, ST,
 _ISA(0x72, LDi,
      {
        cpu->m_regFile[m_r1] =
-           cpu->m_mem[cpu->m_regFile[m_r2] + (int16_t)m_r3_imm];
+           cpu->readMem(cpu->m_regFile[m_r2] + (int16_t)m_r3_imm);
      },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_REG_2})
 
 // STi  m_mem[rs + imm] = rs1
 _ISA(0x73, STi,
      {
-       cpu->m_mem[cpu->m_regFile[m_r2] + (int16_t)m_r3_imm] =
+       cpu->readMem(cpu->m_regFile[m_r2] + (int16_t)m_r3_imm) =
            cpu->m_regFile[m_r1];
      },
      {READ_2REGS_IMM}, {WRITE_2REGS_IMM}, {DUMP_2REGS_12})

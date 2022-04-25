@@ -12,6 +12,22 @@ CPU::CPU(QObject *parent) : QObject(parent) {
 
 CPU::~CPU() { delete execThread; }
 
+uint32_t &CPU::readMem(uint32_t mem) {
+  if (mem < MEM_SIZE) {
+    return m_mem[mem];
+  } else {
+    m_run = false;
+    Instr instr;
+    instr.decode(m_mem[m_nextPC]);
+    showMsg(QString::fromStdString(
+        "[ERROR] Memory access at " + instr.disasm() + " [" +
+        instr.dumpRegs(this) + "] beyond the simulator's memory"));
+    dumpStatus();
+    dumpMem();
+  }
+  return m_mem[0];
+}
+
 static bool isDigit(std::string &std) {
   if (std::find_if(std.begin(), std.end(), [](unsigned char c) {
         return !std::isdigit(c);
@@ -144,6 +160,8 @@ void CPU::pause() {
   instr.decode(m_mem[m_nextPC]);
   showMsg(QString::fromStdString("CPU paused at " + instr.disasm() + " [" +
                                  instr.dumpRegs(this) + "]"));
+  dumpStatus();
+  dumpMem();
 }
 
 void CPU::stop() {
