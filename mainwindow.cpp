@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "DEMO_interface.h"
 #include "cpu.h"
 #include "display.h"
 #include "life.h"
@@ -9,6 +10,7 @@
 #include <QDateTime>
 #include <QMessageBox>
 #include <QRandomGenerator>
+#include <QTimer>
 #include <QToolBar>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -24,6 +26,12 @@ MainWindow::MainWindow(QWidget *parent)
   m_display->setMaximumSize((DIS_WIDTH + 1) * DIS_SCALE,
                             (DIS_HEIGHT + 1) * DIS_SCALE);
   ui->displayLayout->layout()->addWidget(m_display);
+
+  // DEMO
+  m_demoThread = new DemoThread();
+  connect(ui->actionDEMO, SIGNAL(triggered(bool)), this, SLOT(startDEMO()));
+  m_updTimer = new QTimer(this);
+  connect(m_updTimer, SIGNAL(timeout()), this, SLOT(updDisplay()));
 
   // Game of Life
   m_life = new Life(DIS_WIDTH * DIS_SCALE, DIS_HEIGHT * DIS_SCALE, this);
@@ -375,8 +383,28 @@ MainWindow::MainWindow(QWidget *parent)
          "<p>Lisitsyn Sergey (s.a.lisitsyn@gmail.com) 2022"));
 }
 
+// DEMO
+void MainWindow::startDEMO() {
+  m_updTimer->start(10);
+  m_demoThread->start();
+}
+
+extern uint32_t *DEMO_data;
+void MainWindow::updDisplay() {
+  if (DEMO_data) {
+    m_display->loadARGB32Scaled(DEMO_data, DEMO_SIZE_X, DEMO_SIZE_Y, DIS_SCALE);
+    DEMO_data = nullptr;
+  }
+}
+
+extern void DEMO_main();
+void DemoThread::run() { DEMO_main(); }
+
 void MainWindow::showMsg(const QString &msg) { m_statusLabel.setText(msg); }
 
 void MainWindow::loadCode() { m_cpu->readInstrs(ui->codeEdit->toPlainText()); }
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow() {
+  delete ui;
+  delete m_demoThread;
+}

@@ -20,6 +20,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    DEMO.cpp \
+    DEMO_interface.cpp \
     cpu.cpp \
     display.cpp \
     instr.cpp \
@@ -32,6 +34,7 @@ SOURCES += \
     relaxationtor.cpp
 
 HEADERS += \
+    DEMO_interface.h \
     ISA.h \
     cpu.h \
     display.h \

@@ -3,6 +3,8 @@
 
 #include <QLabel>
 #include <QMainWindow>
+#include <QThread>
+class QTimer;
 class Display;
 class Memory;
 class Life;
@@ -17,6 +19,12 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+class DemoThread : public QThread {
+public:
+  explicit DemoThread(){};
+  void run();
+};
+
 class MainWindow : public QMainWindow {
   Q_OBJECT
 
@@ -26,6 +34,8 @@ public:
 public slots:
   void loadCode();
   void showMsg(const QString &msg);
+  void startDEMO();
+  void updDisplay();
 
 private:
   Ui::MainWindow *ui;
@@ -37,5 +47,8 @@ private:
   MapGenerator *m_mapGen;
   CPU *m_cpu;
   QLabel m_statusLabel;
+  DemoThread *m_demoThread;
+
+  QTimer *m_updTimer;
 };
 #endif // MAINWINDOW_H

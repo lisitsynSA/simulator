@@ -511,6 +511,7 @@ p, li { white-space: pre-wrap; }
      <addaction name="actionHeightGen"/>
      <addaction name="actionRiverGen"/>
     </widget>
+    <addaction name="actionDEMO"/>
     <addaction name="actionLife"/>
     <addaction name="actionRelaxation"/>
     <addaction name="actionTorRelaxation"/>
@@ -611,6 +612,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionStopDemo">
    <property name="text">
     <string>Stop Demo</string>
+   </property>
+  </action>
+  <action name="actionDEMO">
+   <property name="text">
+    <string>DEMO</string>
    </property>
   </action>
  </widget>
