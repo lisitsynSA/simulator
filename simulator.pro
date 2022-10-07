@@ -21,6 +21,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     DEMO.cpp \
+    DEMO_LLVM.cpp \
     DEMO_interface.cpp \
     cpu.cpp \
     display.cpp \

@@ -30,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
   // DEMO
   m_demoThread = new DemoThread();
   connect(ui->actionDEMO, SIGNAL(triggered(bool)), this, SLOT(startDEMO()));
+  connect(ui->actionDEMO_LLVM, SIGNAL(triggered(bool)), this,
+          SLOT(startDEMO_LLVM()));
   m_updTimer = new QTimer(this);
   connect(m_updTimer, SIGNAL(timeout()), this, SLOT(updDisplay()));
 
@@ -386,6 +388,13 @@ MainWindow::MainWindow(QWidget *parent)
 // DEMO
 void MainWindow::startDEMO() {
   m_updTimer->start(10);
+  m_demoThread->isLLVM = false;
+  m_demoThread->start();
+}
+
+void MainWindow::startDEMO_LLVM() {
+  m_updTimer->start(10);
+  m_demoThread->isLLVM = true;
   m_demoThread->start();
 }
 
@@ -398,7 +407,14 @@ void MainWindow::updDisplay() {
 }
 
 extern void DEMO_main();
-void DemoThread::run() { DEMO_main(); }
+extern void DEMO_LLVM_main();
+void DemoThread::run() {
+  if (isLLVM) {
+    DEMO_LLVM_main();
+  } else {
+    DEMO_main();
+  }
+}
 
 void MainWindow::showMsg(const QString &msg) { m_statusLabel.setText(msg); }
 

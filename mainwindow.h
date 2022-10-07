@@ -23,6 +23,7 @@ class DemoThread : public QThread {
 public:
   explicit DemoThread(){};
   void run();
+  bool isLLVM;
 };
 
 class MainWindow : public QMainWindow {
@@ -35,6 +36,7 @@ public slots:
   void loadCode();
   void showMsg(const QString &msg);
   void startDEMO();
+  void startDEMO_LLVM();
   void updDisplay();
 
 private:
